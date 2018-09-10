@@ -1,0 +1,14 @@
+{
+  "class": "Knight",
+  "HP": 12,
+  "Armor Type": "Heavy",
+  "Speed": "Medium"
+
+}
+
+{
+  "class": "Archwizard",
+  "HP": 7,
+  "Armor Type": "Light",
+  "Speed": "Medium"
+}
