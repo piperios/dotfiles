@@ -1,7 +1,7 @@
 set nocompatible 
 filetype off
 
-set encoding utf-8
+set encoding=utf-8
 
 
 call plug#begin('~/.vim/plugged')
