@@ -22,6 +22,15 @@ set ruler
 set number
 set cursorline
 
+" Soft-tabs
+
+set expandtab
+set smarttab
+
+set shiftwidth=2
+set tabstop=2
+set softtabstop=2
+
 call plug#end()
 
 filetype plugin on 
