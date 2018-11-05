@@ -9,6 +9,8 @@ call plug#begin('~/.vim/plugged')
 " Plugins
 
 Plug 'https://github.com/scrooloose/nerdtree.git'
+Plug 'rust-lang/rust.vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Colors
 
