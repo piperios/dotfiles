@@ -33,7 +33,12 @@ set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 
-call plug#end()
+" Resuming in last edited line 
+
+autocmd BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \ exe "normal! g`\"" |
+        \ endif
 
 filetype plugin on 
 filetype plugin indent on
