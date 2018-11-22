@@ -24,6 +24,13 @@ set ruler
 set number
 set cursorline
 
+" No sound ffs
+
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
 " Soft-tabs
 
 set expandtab
