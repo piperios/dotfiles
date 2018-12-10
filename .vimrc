@@ -14,9 +14,8 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 " Colors
 
-set t_Co=16
-set background=dark
-colorscheme kantan
+colorscheme aldmeris
+let g:aldmeris_termcolors = 'tango'
 
 " Current position
 
