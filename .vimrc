@@ -15,8 +15,9 @@ Plug 'scwood/vim-hybrid'
 
 " Colors
 
+set t_Co=16
 set background=dark
-colorscheme srcery
+colorscheme kantan
 
 " Current position
 
