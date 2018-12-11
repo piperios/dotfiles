@@ -11,11 +11,12 @@ call plug#begin('~/.vim/plugged')
 Plug 'https://github.com/scrooloose/nerdtree.git'
 Plug 'rust-lang/rust.vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'scwood/vim-hybrid'
 
 " Colors
 
-colorscheme aldmeris
-let g:aldmeris_termcolors = 'tango'
+set background=dark
+colorscheme srcery
 
 " Current position
 
