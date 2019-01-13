@@ -15,9 +15,8 @@ Plug 'scwood/vim-hybrid'
 
 " Colors
 
-set t_Co=16
 set background=dark
-colorscheme kantan
+colorscheme onedark
 
 " Current position
 
@@ -51,3 +50,12 @@ autocmd BufReadPost *
 filetype plugin on 
 filetype plugin indent on
 syntax on
+
+if (empty($TMUX))
+    if (has("nvim"))
+        let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+    endif
+    if (has("termguicolors"))
+        set termguicolors
+    endif
+endif
