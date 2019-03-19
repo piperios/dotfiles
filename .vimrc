@@ -17,9 +17,9 @@ Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-fugitive'
 
 " Colors
-set t_Co=16
+set termguicolors
 set background=dark
-colorscheme kantan
+colorscheme scotchy
 
 " Current position
 set ruler
@@ -53,4 +53,4 @@ autocmd BufReadPost *
 
 filetype plugin on 
 filetype plugin indent on
-syntax on
+syntax enable
