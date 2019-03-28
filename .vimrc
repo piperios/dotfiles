@@ -16,15 +16,9 @@ Plug 'sheerun/vim-polyglot'
 " Git plugin
 Plug 'tpope/vim-fugitive'
 
-" Colors
-set termguicolors
-set background=dark
-colorscheme scotchy
-
 " Current position
 set ruler
 set number
-set cursorline
 
 " No sound ffs
 set noerrorbells
