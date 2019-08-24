@@ -1,17 +1,22 @@
-set nocompatible 
-filetype off
+set nocompatible
 
 set encoding=utf-8
+let mapleader = " "
 
+call plug#begin('~/.wim/plugged')
 
-call plug#begin('~/.vim/plugged')
-
-" Multi lanuage syntax 
+" Multi lanuage syntax
 Plug 'sheerun/vim-polyglot'
+
+" Multi colored brackets and parenthesis
+Plug 'luochen1990/rainbow'
+
+call plug#end()
 
 " Current position
 set ruler
 set number
+set cursorline
 
 " No sound ffs
 set noerrorbells
@@ -27,12 +32,22 @@ set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 
-" Resuming in last edited line 
+" Search result highlighting
+set hlsearch
+
+" Rainbow settings
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+    \ 'ctermfgs': ['blue', 'yellow', 'cyan', 'magenta']
+    \ }
+
+nnoremap <leader>rtw :%s/\s\+$//e<CR>
+
+" Resuming in last edited line
 autocmd BufReadPost *
         \ if line("'\"") > 0 && line("'\"") <= line("$") |
         \ exe "normal! g`\"" |
         \ endif
 
-filetype plugin on 
 filetype plugin indent on
 syntax enable
