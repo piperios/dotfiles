@@ -3,13 +3,19 @@ set nocompatible
 set encoding=utf-8
 let mapleader = " "
 
-call plug#begin('~/.wim/plugged')
+call plug#begin('~/.vim/plugged')
+
+" Git plugins
+Plug 'tpope/vim-fugitive'
+
+" Multi colored brackets and parenthesis
+Plug 'luochen1990/rainbow'
 
 " Multi lanuage syntax
 Plug 'sheerun/vim-polyglot'
 
-" Multi colored brackets and parenthesis
-Plug 'luochen1990/rainbow'
+" Status bar
+Plug 'itchyny/lightline.vim'
 
 call plug#end()
 
@@ -32,8 +38,16 @@ set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 
+" Appearance
+set t_Co=16
+set background=light
+
 " Search result highlighting
 set hlsearch
+
+" Status line settings
+set laststatus=2
+set noshowmode
 
 " Rainbow settings
 let g:rainbow_active = 1
