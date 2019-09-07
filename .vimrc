@@ -30,7 +30,7 @@ set novisualbell
 set t_vb=
 set tm=500
 
-" Soft-tabs
+" Soft tabs
 set expandtab
 set smarttab
 
@@ -41,8 +41,9 @@ set softtabstop=4
 " Appearance
 set t_Co=16
 set background=light
+hi CursorLine cterm=NONE ctermbg=black  ctermfg=NONE
 
-" Search result highlighting
+" Highlight search
 set hlsearch
 
 " Status line settings
