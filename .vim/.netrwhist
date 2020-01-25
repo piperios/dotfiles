@@ -1,5 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =3
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/home/pip/.vim'
+let g:netrw_dirhist_6='/home/pip/.config/i3status'
+let g:netrw_dirhist_5='/home/pip/.vim'
+let g:netrw_dirhist_4='/home/pip/Projects/data-structures-cpp/binary-search'
 let g:netrw_dirhist_3='/home/pip/.vim'
 let g:netrw_dirhist_2='/home/pip/Projects/Python/AlitizBot'
 let g:netrw_dirhist_1='/home/pip/Projects/Java/AlitizBot2.0/build'
