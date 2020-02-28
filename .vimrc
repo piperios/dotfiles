@@ -16,7 +16,6 @@ Plug 'mbbill/undotree'
 
 " Git plugins
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
 
 " Async lint engine
 Plug 'dense-analysis/ale'
@@ -78,11 +77,15 @@ set hidden
 let g:racer_cmd = "$HOME/.cargo/bin/racer"
 let g:racer_experimental_completer = 1
 
+au FileType rust nmap <leader>rd <Plug>(rust-doc)
+au FileType rust nmap <leader>re <Plug>(rust-def)
+au FileType rust nmap <leader>rs <Plug>(rust-def-split)
+
 " Colors
 set termguicolors
 set background=dark
 
-let g:edge_style = 'proton'
+let g:edge_style = 'default'
 let g:edge_disable_italic_comment = 1
 
 colorscheme edge
@@ -103,7 +106,7 @@ set laststatus=2
 set noshowmode
 
 nnoremap <leader>rtw :%s/\s\+$//e<CR>
-nmap \q :nohlsearch<CR>
+nmap \h :nohlsearch<CR>
 
 " Movement remap
 map j gj
