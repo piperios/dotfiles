@@ -7,35 +7,11 @@ let mapleader = " "
 
 call plug#begin('~/.vim/plugged')
 
-" File browser
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-
-" Undo history vizualizer
-Plug 'mbbill/undotree'
-
-" Git plugins
-Plug 'tpope/vim-fugitive'
-
 " Async lint engine
 Plug 'dense-analysis/ale'
 
 " Multi lanuage syntax
 Plug 'sheerun/vim-polyglot'
-
-" Status bar
-Plug 'itchyny/lightline.vim'
-
-" Color scheme
-Plug 'sainnhe/edge'
-
-" Rust plugins
-Plug 'rust-lang/rust.vim'
-Plug 'racer-rust/vim-racer'
-
-" Fuzzy finding
-Plug 'junegunn/fzf'
-Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
@@ -58,42 +34,9 @@ set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 
-" Undotree
-map <C-u> :UndotreeToggle<CR>
-
-" Nerdtree
-map <C-n> :NERDTreeToggle<CR>
-let NERDTreeQuitOnOpen=1
-let NERDTreeMinimalUI=1
-let NERDTreeDirArrows=1
-
-" fzf
-nmap ; :Buffers<CR>
-nmap <leader>f :Files<CR>
-nmap <leader>t :Tags<CR>
-
-" Racer settings
-set hidden 
-let g:racer_cmd = "$HOME/.cargo/bin/racer"
-let g:racer_experimental_completer = 1
-
-au FileType rust nmap <leader>rd <Plug>(rust-doc)
-au FileType rust nmap <leader>re <Plug>(rust-def)
-au FileType rust nmap <leader>rs <Plug>(rust-def-split)
-
 " Colors
-set termguicolors
-set background=dark
-
-let g:edge_style = 'default'
-let g:edge_disable_italic_comment = 1
-
-colorscheme edge
-
-" Lightline colors
-let g:lightline = {
-    \ 'colorscheme' : 'edge',
-    \ }
+set background=light
+hi CursorLine cterm=NONE ctermbg=black ctermfg=NONE
 
 " Show brackets
 set showmatch
@@ -101,10 +44,7 @@ set showmatch
 " Highlight search
 set hlsearch
 
-" Status line settings
-set laststatus=2
-set noshowmode
-
+" Custom macros
 nnoremap <leader>rtw :%s/\s\+$//e<CR>
 nmap \h :nohlsearch<CR>
 
