@@ -1,4 +1,14 @@
 {
-    "rust-analyzer.cargo-watch.enable": false,
-    "rust-analyzer.serverPath": "/home/pip/.cargo_target/release/rust-analyzer"
+    "languageserver": {
+        "clangd": {
+            "command": "clangd",
+            "rootPatterns": ["compile_flags.txt", "compile_commands.json"],
+            "filetypes": ["c", "cc", "cpp", "c++"]
+        },
+        "rust": {
+            "command": "rust-analyzer",
+            "filetypes": ["rust"],
+            "rootPatterns": ["Cargo.toml"]
+        }
+    }
 }

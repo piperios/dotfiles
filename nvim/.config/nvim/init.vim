@@ -23,12 +23,14 @@ Plug 'junegunn/fzf.vim'
 " Completion support
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Formatter
+Plug 'godlygeek/tabular'
+
 " Language support
-Plug 'dense-analysis/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'racer-rust/vim-racer'
 Plug 'rhysd/vim-clang-format'
-Plug 'godlygeek/tabular'
+Plug 'kh3phr3n/python-syntax'
 
 call plug#end()
 
@@ -36,15 +38,11 @@ call plug#end()
 " Appearance
 " =======================================================
 
-" Check terminal for true color support
-if (has('termguicolors'))
-    set termguicolors
-endif
+" Background
+set background=light
+hi Comment ctermfg=green
 
-" Colorscheme options
-colorscheme material
-
-" Status bar
+" Disable statusbar
 set laststatus=2
 
 " Status bar options
@@ -52,9 +50,8 @@ let g:lightline = {
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             [ 'readonly', 'filename', 'modified' ] ]
-    \ },
-    \ 'colorscheme': 'material',
-    \ }
+    \ }}
+
 
 " =======================================================
 " Custom binds/macros
@@ -102,6 +99,12 @@ inoremap <silent><expr> <TAB>
     \ <SID>check_back_space() ? "\<TAB>" :
     \ coc#refresh()
 
+" Make tab work when completion window is not up
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 " Code navigation
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -111,11 +114,8 @@ nmap <silent> gr <Plug>(coc-references)
 " Rename symbol
 nmap <leader>rn <Plug>(coc-rename)
 
-" Trigger coc completion
-inoremap <silent><expr> <C-.> coc#refresh()
-
 " Trim trailing whitespaces
-nnoremap <leader>rtw :%s/\s\+$//e<CR> 
+nnoremap <leader>rtw :%s/\s\+$//e<CR>
 
 " =======================================================
 " Editor settings
@@ -125,6 +125,9 @@ nnoremap <leader>rtw :%s/\s\+$//e<CR>
 filetype plugin indent on
 set autoindent
 set timeoutlen=300
+set nobackup
+set nowritebackup
+set shortmess+=c
 syntax enable
 set encoding=utf-8
 set noshowmode
@@ -175,8 +178,7 @@ autocmd BufReadPost *
 " =======================================================
 
 set guioptions-=T " No toolbar
-set vb t_vb = " NO. BEEPS.
-set ttyfast " So I can scroll through code before dying of old age :)
+set vb t_vb = " NO. BEEPS. *EVER*.
 set ruler " Line info
 set number " Absolute line
 set relativenumber " Also, relative numberline
