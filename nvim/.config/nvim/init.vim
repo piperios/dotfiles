@@ -20,8 +20,8 @@ Plug 'andymass/vim-matchup'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
 Plug 'junegunn/fzf.vim'
 
-" Completion support
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" YCM
+Plug 'ycm-core/YouCompleteMe'
 
 " Formatter
 Plug 'godlygeek/tabular'
@@ -57,9 +57,6 @@ let g:lightline = {
 " Custom binds/macros
 " =======================================================
 
-" Quick save
-nmap <leader>w :w<CR>
-
 " Disable search highlighting
 nmap \h :nohlsearch<CR>
 vmap \h :nohlsearch<CR>
@@ -93,26 +90,16 @@ let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=1
 let NERDTreeAutoDeleteBuffer=1
 
-" Tab to navigate completion menu
-inoremap <silent><expr> <TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ coc#refresh()
+" YCM settings & shortcuts
+let g:ycm_python_interpreter_path = "/usr/bin/python3.8"
+let g:ycm_clangd_binary_path = "/usr/bin/clangd"
 
-" Make tab work when completion window is not up
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Code navigation
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Rename symbol
-nmap <leader>rn <Plug>(coc-rename)
+nnoremap <leader>gd :YcmCompleter GoToDefinition<CR>
+nnoremap <leader>gy :YcmCompleter GoToType<CR>
+nnoremap <leader>gi :YcmCompleter GoToImplementation<CR>
+nnoremap <leader>gr :YcmCompleter GoToReferences<CR>
+nnoremap <leader>rr :YcmCompleter RefactorRename
+nnoremap <leader>rs :YcmRestartServer<CR>
 
 " Trim trailing whitespaces
 nnoremap <leader>rtw :%s/\s\+$//e<CR>
@@ -128,6 +115,7 @@ set timeoutlen=300
 set nobackup
 set nowritebackup
 set shortmess+=c
+set completeopt-=preview
 syntax enable
 set encoding=utf-8
 set noshowmode
