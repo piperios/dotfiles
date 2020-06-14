@@ -5,7 +5,6 @@ let mapleader = "\<Space>"
 call plug#begin('~/.config/nvim/plugged')
 
 " General
-Plug 'justinmk/vim-sneak'
 Plug 'itchyny/lightline.vim'
 
 " Filesystem navigation
@@ -16,17 +15,8 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'machakann/vim-highlightedyank'
 Plug 'andymass/vim-matchup'
 
-" Fzf
-Plug 'junegunn/fzf', { 'dir': '~/.fzf' }
-Plug 'junegunn/fzf.vim'
-
-" YCM
-Plug 'ycm-core/YouCompleteMe'
-
-" Formatter
-Plug 'godlygeek/tabular'
-
 " Language support
+Plug 'dense-analysis/ale'
 Plug 'rust-lang/rust.vim'
 Plug 'racer-rust/vim-racer'
 Plug 'rhysd/vim-clang-format'
@@ -39,7 +29,7 @@ call plug#end()
 " =======================================================
 
 " Background
-set background=light
+set t_Co=16
 hi Comment ctermfg=green
 
 " Disable statusbar
@@ -61,12 +51,6 @@ let g:lightline = {
 nmap \h :nohlsearch<CR>
 vmap \h :nohlsearch<CR>
 
-" Open file
-map <C-p> :Files<CR>
-
-" Open buffers
-nmap <leader>; :Buffers<CR>
-
 " Move to start and end of line from home row
 map H ^
 map L $
@@ -75,7 +59,7 @@ map L $
 nnoremap j gj
 nnoremap k gk
 
-" Arrow keys are for noobs (it's better this way)
+" Unbind arrow keys
 nnoremap <up> <nop>
 nnoremap <down> <nop>
 inoremap <up> <nop>
@@ -90,16 +74,8 @@ let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=1
 let NERDTreeAutoDeleteBuffer=1
 
-" YCM settings & shortcuts
-let g:ycm_python_interpreter_path = "/usr/bin/python3.8"
-let g:ycm_clangd_binary_path = "/usr/bin/clangd"
-
-nnoremap <leader>gd :YcmCompleter GoToDefinition<CR>
-nnoremap <leader>gy :YcmCompleter GoToType<CR>
-nnoremap <leader>gi :YcmCompleter GoToImplementation<CR>
-nnoremap <leader>gr :YcmCompleter GoToReferences<CR>
-nnoremap <leader>rr :YcmCompleter RefactorRename
-nnoremap <leader>rs :YcmRestartServer<CR>
+nnoremap <leader>gd :ALEGoToDefinition<CR>
+nnoremap <leader>gr :ALEFindReferences<CR>
 
 " Trim trailing whitespaces
 nnoremap <leader>rtw :%s/\s\+$//e<CR>
@@ -111,7 +87,7 @@ nnoremap <leader>rtw :%s/\s\+$//e<CR>
 " General settings
 filetype plugin indent on
 set autoindent
-set timeoutlen=300
+set timeoutlen=100
 set nobackup
 set nowritebackup
 set shortmess+=c
@@ -120,7 +96,6 @@ syntax enable
 set encoding=utf-8
 set noshowmode
 set hidden
-let g:sneak#s_next=1
 
 " Better safe than sorry
 set secure
@@ -170,4 +145,3 @@ set vb t_vb = " NO. BEEPS. *EVER*.
 set ruler " Line info
 set number " Absolute line
 set relativenumber " Also, relative numberline
-set cursorline " Also also, cursror line, cause why not?
