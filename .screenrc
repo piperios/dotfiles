@@ -1,0 +1,12 @@
+# Turn off all the annoying crap
+startup_message off
+vbell off
+
+# Remap '\' as the prefix key
+escape \\
+escape \e
+
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%? %= %{g}][%{B} %m/%d %{W}%c %{g}]'
+
+defscrollback 50000

@@ -2,50 +2,9 @@ set nocompatible
 filetype off
 let mapleader = "\<Space>"
 
-call plug#begin('~/.config/nvim/plugged')
-
-" General
-Plug 'itchyny/lightline.vim'
-
-" Filesystem navigation
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-
-" Appearance
-Plug 'machakann/vim-highlightedyank'
-Plug 'andymass/vim-matchup'
-
-" Language support
-Plug 'dense-analysis/ale'
-Plug 'rust-lang/rust.vim'
-Plug 'racer-rust/vim-racer'
-Plug 'rhysd/vim-clang-format'
-Plug 'kh3phr3n/python-syntax'
-
-call plug#end()
-
-" =======================================================
-" Appearance
-" =======================================================
-
 " Background
 set t_Co=16
 hi Comment ctermfg=green
-
-" Disable statusbar
-set laststatus=2
-
-" Status bar options
-let g:lightline = {
-    \ 'active': {
-    \   'left': [ [ 'mode', 'paste' ],
-    \             [ 'readonly', 'filename', 'modified' ] ]
-    \ }}
-
-
-" =======================================================
-" Custom binds/macros
-" =======================================================
 
 " Disable search highlighting
 nmap \h :nohlsearch<CR>
@@ -67,41 +26,21 @@ inoremap <down> <nop>
 inoremap <left> <nop>
 inoremap <right> <nop>
 
-" Nerdtree settings
-map <C-e> :NERDTreeToggle<cr>
-let NERDTreeQuitOnOpen=1
-let NERDTreeMinimalUI=1
-let NERDTreeDirArrows=1
-let NERDTreeAutoDeleteBuffer=1
-
-nnoremap <leader>gd :ALEGoToDefinition<CR>
-nnoremap <leader>gr :ALEFindReferences<CR>
-
-" Trim trailing whitespaces
+" Macro that trims trailing whitespaces
 nnoremap <leader>rtw :%s/\s\+$//e<CR>
-
-" =======================================================
-" Editor settings
-" =======================================================
 
 " General settings
 filetype plugin indent on
-set autoindent
-set timeoutlen=100
-set nobackup
-set nowritebackup
-set shortmess+=c
-set completeopt-=preview
 syntax enable
+
+set autoindent
+set timeoutlen=1000
 set encoding=utf-8
 set noshowmode
 set hidden
 
 " Better safe than sorry
 set secure
-
-" More compact display for messages
-set cmdheight=2
 
 " Faster update time
 set updatetime=300
@@ -136,12 +75,7 @@ autocmd BufReadPost *
         \ exe "normal! g`\"" |
         \ endif
 
-" =======================================================
-" GUI settings
-" =======================================================
-
-set guioptions-=T " No toolbar
-set vb t_vb = " NO. BEEPS. *EVER*.
-set ruler " Line info
-set number " Absolute line
-set relativenumber " Also, relative numberline
+" Some functional settings
+set vb t_vb = 
+set ruler 
+set number 
