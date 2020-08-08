@@ -1,3 +1,4 @@
+xmodmap -e "pointer = 1 2 3"
 xrdb -merge ~/.Xresources
 ~/.screenlayout/default.sh
-exec i3
+exec /usr/bin/xmonad
