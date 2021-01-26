@@ -14,8 +14,8 @@ colorscheme custom
 set guifont=Consolas:h20
 
 let g:neovide_refresh_rate=75
-let g:neovide_cursor_length_lenght=0.05
-let g:neovide_cursor_trail_lenght=0.1
+let g:neovide_cursor_length_lenght=0.00
+let g:neovide_cursor_trail_lenght=0.0
 let g:neovide_cursor_antialiasing=v:true
 
 " File stats and line numbers
@@ -58,5 +58,5 @@ autocmd BufReadPost *
         \ exe "normal! g`\"" |
         \ endif
 
-" No auto insert comment plz
-au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+" No auto insert comment plz why would anyone want that?
+au BufEnter * set fo-=c fo-=r fo-=o
