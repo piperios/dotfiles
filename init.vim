@@ -15,9 +15,9 @@ call plug#end()
 " Appearance
 colorscheme custom
 
-set guifont=Consolas:h18
 set noshowmode
 set showtabline=2
+set termguicolors
 set timeoutlen=10000
 set ttimeoutlen=0
 
@@ -112,21 +112,25 @@ function! TrimWhitespaceOnSave()
   :%s/\s\+$//e
 endfunction
 
-let g:neovide_cursor_animation_length=0.08
-let g:neovide_cursor_antialiasing=v:true
-let g:neovide_floating_blur=v:false
-let g:neovide_floating_opacity=1.0
-let g:neovide_fullscreen=v:true
-let g:neovide_refresh_rate=75
-let g:neovide_window_floating_blur=v:false
-let g:neovide_window_floating_opacity=0.0
+if has('win32')
+  set guifont=Consolas:h18
 
-nnoremap <silent> <F11> :call ToggleNeovideFullscreen()<CR>
+  let g:neovide_cursor_animation_length=0.08
+  let g:neovide_cursor_antialiasing=v:true
+  let g:neovide_floating_blur=v:false
+  let g:neovide_floating_opacity=1.0
+  let g:neovide_fullscreen=v:true
+  let g:neovide_refresh_rate=75
+  let g:neovide_window_floating_blur=v:false
+  let g:neovide_window_floating_opacity=0.0
 
-function! ToggleNeovideFullscreen()
-  if g:neovide_fullscreen == v:true
-    let g:neovide_fullscreen=v:false
-  else
-    let g:neovide_fullscreen=v:true
-  endif
-endfunction
+  nnoremap <silent> <F11> :call ToggleNeovideFullscreen()<CR>
+
+  function! ToggleNeovideFullscreen()
+    if g:neovide_fullscreen == v:true
+      let g:neovide_fullscreen=v:false
+    else
+      let g:neovide_fullscreen=v:true
+    endif
+  endfunction
+endif
