@@ -13,11 +13,9 @@ Plug 'itchyny/lightline.vim'
 call plug#end()
 
 " Appearance
-colorscheme custom
-
+color custom
 set noshowmode
 set showtabline=2
-set termguicolors
 set timeoutlen=10000
 set ttimeoutlen=0
 
@@ -41,8 +39,6 @@ let g:netrw_liststyle=3
 
 " File stats and line numbers
 set cursorline
-set number
-set relativenumber
 set ruler
 
 " Indentation settings
@@ -80,36 +76,27 @@ nnoremap <Leader>n :enew!<CR>
 nnoremap <Leader>o :Explore<CR>
 nnoremap <Leader>p :so<Space>
 nnoremap <Leader>q :qa!<CR>
+nnoremap <Leader>t :terminal<CR>
 nnoremap <Leader>v :vnew!<CR>
 nnoremap <Leader>w :w!<CR>
 
 nnoremap <Leader><S-d> :bufdo bd!<CR>
 nnoremap <Leader><S-o> :Vexplore!<CR>
 nnoremap <Leader><S-p> :mks!<CR>
+nnoremap <Leader><S-t> :vsplit term://bash<CR>
+
+tnoremap <silent> <Esc> <C-\><C-n>:bd!<CR>
 
 " Autoexecuting functions
-autocmd BufEnter * :call DisableAutoInsertComment()
-autocmd BufWritePre * :call TrimWhitespaceOnSave()
-autocmd BufReadPost * :call ResumeOnLastEditedLine()
+autocmd BufEnter * set fo-=c fo-=r fo-=o
+autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufReadPost * if line("'\"") > 0 && line ("'\"") <= line("$")
+      \ | exe "normal! g`\"" | endif
 
 " Custom functions
 function! ClearSearch()
   set nohlsearch
   let @/=""
-endfunction
-
-function! DisableAutoInsertComment()
-  set fo-=c fo-=r fo-=o
-endfunction
-
-function! ResumeOnLastEditedLine()
-  if line("'\"") > 0 && line ("'\"") <= line("$")
-    exe "normal! g`\""
-  endif
-endfunction
-
-function! TrimWhitespaceOnSave()
-  :%s/\s\+$//e
 endfunction
 
 if has('win32')
