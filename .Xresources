@@ -1,42 +1,28 @@
 XTerm*termName: xterm-256color
 XTerm*locale: true
-XTerm*faceName: IBM Plex Mono:size=11
+XTerm*faceName: Inconsolata for Powerline
+XTerm*faceSize: 16
 XTerm*selectToClipboard: true
 XTerm*cursorBlink: true
 XTerm*ScrollBar: false
 
-! Colors
-*.background: #202020
-*.foreground: #d0d0d0
+XTerm*background:  #121212
+XTerm*foreground:  #d0d0d0
+XTerm*cursorColor: #8aa355
 
-! Black / Less black black :)
-xterm*color0:  #202020
-xterm*color8:  #606060
-
-! Red / Bright red
-xterm*color1:  #993d1f
-xterm*color9:  #c25e5f
-
-! Green / Bright green
-xterm*color2:  #82994f
-xterm*color10: #9bb26a
-
-! Yellow / Bright yellow
-xterm*color3:  #b3a657
-xterm*color11: #f4bf77
-
-! Blue / Bright blue
-xterm*color4:  #5994ad
-xterm*color12: #7baabd
-
-! Magenta / Bright magenta
-xterm*color5:  #a06594
-xterm*color13: #b485aa
-
-! Cyan / Bright cyan
-xterm*color6:  #64aca0
-xterm*color14: #86beb4
-
-! Less white white :) / White
-xterm*color7:  #d0d0d0
-xterm*color15: #f5f5f5
+XTerm*color0:  #121212
+XTerm*color1:  #8a3333
+XTerm*color2:  #3d4725
+XTerm*color3:  #946e3d
+XTerm*color4:  #1c4b5e
+XTerm*color5:  #493059
+XTerm*color6:  #2b4242
+XTerm*color7:  #b5b3c9
+XTerm*color8:  #5b5f71
+XTerm*color9:  #bf6464
+XTerm*color10: #8aa355
+XTerm*color11: #8f785b
+XTerm*color12: #4a8bba
+XTerm*color13: #845787
+XTerm*color14: #719696
+XTerm*color15: #f0ecfe

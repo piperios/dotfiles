@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =9
+let g:netrw_dirhist_9='/home/pip/tools/pin/source/tools'
+let g:netrw_dirhist_8='/home/pip/tools/pin/source/tools/Config'
+let g:netrw_dirhist_7='/home/pip/.config/nvim/colors'
+let g:netrw_dirhist_6='/home/pip/.config/nvim/ftplugin'
+let g:netrw_dirhist_5='/home/pip/uni/myy601/kiwi/kiwi-source/engine'
+let g:netrw_dirhist_4='/home/pip/uni/myy601/kiwi/kiwi-source/bench'
+let g:netrw_dirhist_3='/home/pip/uni/myy601/kiwi/kiwi-source'
+let g:netrw_dirhist_2='/home/pip/uni/myy601/kiwi/kiwi-source/engine'
+let g:netrw_dirhist_1='/home/pip/.config'
+let g:netrw_dirhist_0='/home/pip/.config/nvim/colors'

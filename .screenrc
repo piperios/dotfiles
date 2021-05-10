@@ -2,9 +2,9 @@
 startup_message off
 vbell off
 
+term st-256color
 # Remap '\' as the prefix key
-escape \\
-escape \e
+escape ^\\
 
 hardstatus alwayslastline
 hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%? %= %{g}][%{B} %m/%d %{W}%c %{g}]'

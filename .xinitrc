@@ -1,4 +1,2 @@
-xmodmap -e "pointer = 1 2 3"
-xrdb -merge ~/.Xresources
-~/.screenlayout/default.sh
-exec /usr/bin/xmonad
+~/build/suckless/dwm-bar/dwm_bar.sh &
+exec dwm
