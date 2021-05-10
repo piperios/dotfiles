@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Inconsolata:pixelsize=18:antialias=true:autohint=true";
+static char *font = "Noto Sans Mono:pixelsize=20:antialias=true:autohint=true";
 static int borderpx = 2;
 
 /*
@@ -95,23 +95,20 @@ unsigned int tabspaces = 8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-	/* 8 normal colors */
 	[0]   = "#121212",
 	[1]   = "#8a3333",
 	[2]   = "#3d4725",
 	[3]   = "#946e3d",
 	[4]   = "#1c4b5e",
-	[5]   = "#8f63ad",
+	[5]   = "#493059",
 	[6]   = "#2b4242",
 	[7]   = "#b5b3c9",
-
-	/* 8 bright colors */
 	[8]   = "#5b5f71",
 	[9]   = "#bf6464",
 	[10]  = "#8aa355",
 	[11]  = "#8f785b",
 	[12]  = "#4a8bba",
-	[13]  = "#c6aed7",
+	[13]  = "#846586",
 	[14]  = "#719696",
 	[15]  = "#f0ecfe",
 
@@ -127,7 +124,7 @@ static const char *colorname[] = {
  */
 unsigned int defaultfg = 251;
 unsigned int defaultbg = 0;
-static unsigned int defaultcs = 1;
+static unsigned int defaultcs = 7;
 static unsigned int defaultrcs = 0;
 
 /*
