@@ -1,0 +1,40 @@
+scrolling:
+  history: 1000
+
+font:
+  normal:
+    family: Inconsolata
+    style: Medium
+
+  size: 13.0
+
+colors:
+  primary:
+    background: '0x202020'
+    foreground: '0xd8d8d8'
+
+  normal:
+    black:   '0x202020'
+    red:     '0x8a3333'
+    green:   '0x5e6e39'
+    yellow:  '0x946e3d'
+    blue:    '0x32667a'
+    magenta: '0x68477d'
+    cyan:    '0x466b6b'
+    white:   '0xc0b18b'
+
+  bright:
+    black:   '0x5b5f71'
+    red:     '0xbf6464'
+    green:   '0x8aa355'
+    yellow:  '0x8f785b'
+    blue:    '0x4a8bba'
+    magenta: '0x845787'
+    cyan:    '0x719696'
+    white:   '0xf0ecfe'
+
+bell:
+  duration: 0
+
+selection:
+  save_to_clipboard: true

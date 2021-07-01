@@ -1,0 +1,31 @@
+#!/bin/sh
+xrandr --output DP-2 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output DP-4 --mode 1920x1080 --pos 0x0 --rotate normal
+
+bspc monitor DP-2 -d I II III
+bspc monitor DP-4 -d IV V VI
+bspc monitor DP-4 -s DP-2
+
+bspc config border_width 4
+bspc config window_gap   12
+
+bspc config split_ratio        0.5
+bspc config borderless_monocle true
+bspc config gapless_monocle    true
+
+bspc config top_padding 24
+
+bspc config normal_border_color   "$color1"
+bspc config active_border_color   "$color2"
+bspc config focused_border_color  "$color15"
+bspc config presel_feedback_color "$color1"
+
+bspc config click_to_focus false
+bspc config focus_follows_pointer on
+
+#AUTOSTART
+compton -bc --config /home/pip/.config/compton/compton.conf &
+redshift -l 39:21 &
+unclutter &
+sxhkd &
+
+~/.config/ui-update.sh &
