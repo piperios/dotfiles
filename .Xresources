@@ -1,28 +1,28 @@
 XTerm*termName: xterm-256color
 XTerm*locale: true
-XTerm*faceName: Inconsolata for Powerline
-XTerm*faceSize: 16
+XTerm*faceName: Noto Sans Mono
+XTerm*faceSize: 13
 XTerm*selectToClipboard: true
 XTerm*cursorBlink: true
 XTerm*ScrollBar: false
 
-XTerm*background:  #121212
-XTerm*foreground:  #d0d0d0
-XTerm*cursorColor: #8aa355
+XTerm*background:  #1d2021
+XTerm*foreground:  #d5c4a1
+XTerm*cursorColor: #d5c4a1
 
-XTerm*color0:  #121212
-XTerm*color1:  #8a3333
-XTerm*color2:  #3d4725
-XTerm*color3:  #946e3d
-XTerm*color4:  #1c4b5e
-XTerm*color5:  #493059
-XTerm*color6:  #2b4242
-XTerm*color7:  #b5b3c9
-XTerm*color8:  #5b5f71
-XTerm*color9:  #bf6464
-XTerm*color10: #8aa355
-XTerm*color11: #8f785b
-XTerm*color12: #4a8bba
-XTerm*color13: #845787
-XTerm*color14: #719696
-XTerm*color15: #f0ecfe
+XTerm*color0:  #1d2021
+XTerm*color1:  #f2513f
+XTerm*color2:  #b8bb26
+XTerm*color3:  #f0ba3e
+XTerm*color4:  #83a598
+XTerm*color5:  #d3869b
+XTerm*color6:  #8ec07c
+XTerm*color7:  #d5c4a1
+XTerm*color8:  #665c54
+XTerm*color9:  #f2513f
+XTerm*color10: #b8bb26
+XTerm*color11: #f0ba3e
+XTerm*color12: #83a598
+XTerm*color13: #d3869b
+XTerm*color14: #8ec07c
+XTerm*color15: #e0d7b1
