@@ -1,40 +1,55 @@
 scrolling:
   history: 1000
 
+window:
+  padding:
+    x: 0
+    y: 0
+  decorations: none
+
 font:
   normal:
-    family: Inconsolata
-    style: Medium
+    family: Noto Sans Mono
+    style: Regular
 
-  size: 13.0
+  size: 12.5
 
 colors:
+  # Default colors
   primary:
-    background: '0x202020'
-    foreground: '0xd8d8d8'
+    background: '#1d2021'
+    foreground: '#d5c4a1'
+
+  cursor:
+    text: '#1d2021'
+    cursor: '#d5c4a1'
 
   normal:
-    black:   '0x202020'
-    red:     '0x8a3333'
-    green:   '0x5e6e39'
-    yellow:  '0x946e3d'
-    blue:    '0x32667a'
-    magenta: '0x68477d'
-    cyan:    '0x466b6b'
-    white:   '0xc0b18b'
+    black:   '#1d2021'
+    red:     '#f2513f'
+    green:   '#b8bb26'
+    yellow:  '#f0ba3e'
+    blue:    '#83a598'
+    magenta: '#d3869b'
+    cyan:    '#8ec07c'
+    white:   '#d5c4a1'
 
+  # Bright colors
   bright:
-    black:   '0x5b5f71'
-    red:     '0xbf6464'
-    green:   '0x8aa355'
-    yellow:  '0x8f785b'
-    blue:    '0x4a8bba'
-    magenta: '0x845787'
-    cyan:    '0x719696'
-    white:   '0xf0ecfe'
+    black:   '#665c54'
+    red:     '#f2513f'
+    green:   '#b8bb26'
+    yellow:  '#f0ba3e'
+    blue:    '#83a598'
+    magenta: '#d3869b'
+    cyan:    '#8ec07c'
+    white:   '#e0d7b1'
 
 bell:
   duration: 0
 
 selection:
   save_to_clipboard: true
+
+shell:
+  program: /usr/bin/fish

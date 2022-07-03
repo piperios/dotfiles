@@ -10,18 +10,15 @@ super + Return
 super + space
 	rofi -show combi
 
-# make sxhkd reload its configuration files:
+# lock pc
 super + Escape
+  i3lock -e -i ~/.config/lock.png
 
 # Browser
 super + e
-	chromium
+	firefox
 
-super + o
-	thunar
 
-super + p
-  ~/.local/bin/betterlockscreen -l blur
 #
 # bspwm hotkeys
 #
