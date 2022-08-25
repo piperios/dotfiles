@@ -1,12 +1,8 @@
 let mapleader = "\<Space>"
 syntax enable
-
 set nocompatible
-set rtp+=~/other/base16/templates/vim/
-call plug#begin()
 
-" File explorer
-Plug 'preservim/nerdtree'
+call plug#begin()
 
 " LSP support
 Plug 'neovim/nvim-lspconfig'
@@ -18,6 +14,10 @@ Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'hrsh7th/cmp-vsnip', {'branch': 'main'}
 Plug 'hrsh7th/vim-vsnip'
+
+" Fzf
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 " Editor enhancements
 Plug 'editorconfig/editorconfig-vim'
@@ -31,6 +31,10 @@ Plug 'andymass/vim-matchup'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'rhysd/vim-clang-format'
 Plug 'dag/vim-fish'
+Plug 'ziglang/zig.vim'
+
+" Color
+Plug 'kaicataldo/material.vim', { 'branch': 'main' }
 
 call plug#end()
 
@@ -40,25 +44,13 @@ if has('nvim')
     noremap <C-q> :confirm qall<CR>
 end
 
-" Deal with colors
-if !has('gui_running')
-  set t_Co=256
-endif
-if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
-  " Screen does not (yet) support truecolor
+if (has('termguicolors'))
   set termguicolors
 endif
 
-set background=dark
-colorscheme base16-gruvbox-dark-hard
-syntax on
-hi Normal ctermbg=NONE
-
-" Customize the highlight a bit.
-" Make comments more prominent -- they are important.
-call Base16hi("Comment", g:base16_gui09, "", g:base16_cterm09, "", "", "")
-" Make it clearly visible which argument we're at.
-call Base16hi("LspSignatureActiveParameter", g:base16_gui05, g:base16_gui03, g:base16_cterm05, g:base16_cterm03, "bold", "")
+let g:material_terminal_italics = 1
+let g:material_theme_style='darker'
+colorscheme material
 
 " =============================================================================
 " # Plugin settings
@@ -83,13 +75,19 @@ function! LightlineFilename()
   return expand('%:t') !=# '' ? @% : '[No Name]'
 endfunction
 
-" NERDTree
-let NERDTreeQuitOnOpen=1
-let NERDMinimalUI=1
-let NERDTreeDirArrows=1
-let NERDTreeAutoDeleteBuffer=1
+" nvim-treesitter
+lua << END
+require('nvim-treesitter.configs').setup {
+    highlight = {
+        enable = true,
+    }
+}
+END
 
-" LSP configuration
+" =============================================================================
+" # LSP configuration
+" =============================================================================
+
 lua << END
 local cmp = require'cmp'
 
@@ -104,11 +102,9 @@ cmp.setup({
     end,
   },
   mapping = {
-    -- Tab immediately completes. C-n/C-p to select.
     ['<Tab>'] = cmp.mapping.confirm({ select = true })
   },
   sources = cmp.config.sources({
-    -- TODO: currently snippets from lsp end up getting prioritized -- stop that!
     { name = 'nvim_lsp' },
   }, {
     { name = 'path' },
@@ -137,19 +133,16 @@ local on_attach = function(client, bufnr)
   local opts = { noremap=true, silent=true }
 
   -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  buf_set_keymap('n', 'gD',       '<Cmd>lua vim.lsp.buf.declaration()<CR>',         opts)
+  buf_set_keymap('n', 'gd',       '<Cmd>lua vim.lsp.buf.definition()<CR>',          opts)
+  buf_set_keymap('n', 'K',        '<Cmd>lua vim.lsp.buf.hover()<CR>',               opts)
+  buf_set_keymap('n', '<C-k>',    '<cmd>lua vim.lsp.buf.signature_help()<CR>',      opts)
+  buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>',              opts)
+  buf_set_keymap('n', 'gr',       '<cmd>lua vim.lsp.buf.references()<CR>',          opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>',       opts)
+  buf_set_keymap('n', '[d',       '<cmd>lua vim.diagnostic.goto_prev()<CR>',        opts)
+  buf_set_keymap('n', ']d',       '<cmd>lua vim.diagnostic.goto_next()<CR>',        opts)
+  buf_set_keymap("n", "<space>f", '<cmd>lua vim.lsp.buf.format {async = true}<CR>', opts)
 
   -- Get signatures (and _only_ signatures) when in argument lists.
   require "lsp_signature".on_attach({
@@ -182,21 +175,10 @@ lspconfig.rust_analyzer.setup {
   capabilities = capabilities,
 }
 
-
-lspconfig.clangd.setup {
-  on_attach = on_attach,
-  root_dir = root_pattern(
-    '.clangd',
-    '.clang-tidy',
-    '.clang-format',
-    'compile_commands.json',
-    './build/compile_commands.json',
-    'compile_flags.txt',
-    'configure.ac',
-    '.git'
-  ),
-  capabilities = capabilities,
+lspconfig.zls.setup {
+    on_attach = on_attach,
 }
+
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -215,11 +197,10 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
-
 END
 
 " Enable type inlay hints
-autocmd CursorHold,CursorHoldI *.rs :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
+autocmd CursorHold,CursorHoldI *.rs *.zig:lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
 
 " Completion
 " Better completion
@@ -241,21 +222,37 @@ set ttimeoutlen=0
 " Indentation settings
 set ai
 set expandtab
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set signcolumn=yes
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set signcolumn=no
 
 " Search options
-set hlsearch
 set incsearch
+set hlsearch
 set smartcase
 set showmatch
+set gdefault
+
+" Wrapping options
+set formatoptions=tc " wrap text and comments using textwidth
+set formatoptions+=r " continue comments when pressing ENTER in I mode
+set formatoptions+=q " enable formatting of comments with gq
+set formatoptions+=n " detect lists for formatting
+set formatoptions+=b " auto-wrap in insert mode, and do not wrap old long lines
+
+" Improve search
+nnoremap ? ?\v
+nnoremap / /\v
+cnoremap %s/ %sm/
 
 " Keybinds
 map H ^
 map L $
 
+map <F1> <Esc>
+imap <F1> <Esc>
+map Q <Nop>
 nnoremap ; :
 
 nnoremap j gj
@@ -267,15 +264,15 @@ nnoremap <silent> <Leader>k :bn!<CR>
 nnoremap <silent> <Leader>w :w<CR>
 nnoremap <silent> <Leader>q :q<CR>
 
-nnoremap <silent> <C-t> :NERDTreeToggle<CR>
+vnoremap <silent> <Leader><CR> :nohl<CR>
+nnoremap <silent> <Leader><CR> :nohl<CR>
 
-vnoremap <silent> <C-h> :nohlsearch<CR>
-nnoremap <silent> <C-h> :nohlsearch<CR>
+nmap <silent> <Leader>t :Files<CR>
+nmap <silent> <Leader>h :Ag<CR>
 
 " =============================================================================
 " # GUI settings
 " =============================================================================
-set guioptions-=T               " Remove toolbar
 set vb t_vb=                    " No more beeps
 set backspace=2                 " Backspace over newlines
 set nofoldenable
@@ -296,6 +293,7 @@ set shortmess+=c                " don't give |ins-completion-menu| messages.
 " =============================================================================
 " # Autocommands
 " =============================================================================
+let g:zig_fmt_autosave = 1
 
 " Don't auto-insert comments on newline
 autocmd BufEnter * set fo-=c fo-=r fo-=o
