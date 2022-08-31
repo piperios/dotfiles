@@ -2,42 +2,6 @@ let mapleader = "\<Space>"
 syntax enable
 set nocompatible
 
-call plug#begin()
-
-" LSP support
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'hrsh7th/cmp-nvim-lsp', {'branch': 'main'}
-Plug 'hrsh7th/cmp-buffer', {'branch': 'main'}
-Plug 'hrsh7th/cmp-path', {'branch': 'main'}
-Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
-Plug 'ray-x/lsp_signature.nvim'
-Plug 'hrsh7th/cmp-vsnip', {'branch': 'main'}
-Plug 'hrsh7th/vim-vsnip'
-
-" Fzf
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-
-" Editor enhancements
-Plug 'editorconfig/editorconfig-vim'
-
-" Visual enhancements
-Plug 'itchyny/lightline.vim'
-Plug 'machakann/vim-highlightedyank'
-Plug 'andymass/vim-matchup'
-
-" Syntax enhancements
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'rhysd/vim-clang-format'
-Plug 'dag/vim-fish'
-Plug 'ziglang/zig.vim'
-
-" Color
-Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-
-call plug#end()
-
 if has('nvim')
     set guicursor=n-v-c:block-Cursor/lCursor-blinkon0,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor
     set inccommand=nosplit
@@ -48,51 +12,148 @@ if (has('termguicolors'))
   set termguicolors
 endif
 
-let g:material_terminal_italics = 1
-let g:material_theme_style='darker'
-colorscheme material
+if exists("g:neovide")
+    let g:neovide_refresh_rate=60
+    let g:neovide_scroll_animation_length=0.05
+    let g:neovide_cursor_animation_length=0.05
+    let g:neovide_cursor_trail_length=0.05
+    let g:neovide_cursor_antialiasing=v:true
+
+    set guifont=Fira\ Code\ Retina:h13
+endif
 
 " =============================================================================
 " # Plugin settings
 " =============================================================================
 
 " Lightline
-let g:lightline = {
-      \ 'colorscheme': 'Tomorrow_Night',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'readonly', 'filename', 'modified' ] ],
-      \   'right': [ [ 'lineinfo' ],
-      \              [ 'percent' ],
-      \              [ 'fileencoding', 'filetype' ] ],
-      \ },
-      \ 'component_function': {
-      \   'filename': 'LightlineFilename'
-      \ },
-      \ }
-
-function! LightlineFilename()
-  return expand('%:t') !=# '' ? @% : '[No Name]'
-endfunction
-
-" nvim-treesitter
 lua << END
+-- packer
+vim.cmd [[packadd packer.nvim]]
+
+require('packer').startup(function(use)
+    use {
+      'meliora-theme/neovim',
+      requires = {'rktjmp/lush.nvim'}
+    }
+
+    use {
+      'nvim-telescope/telescope.nvim', tag = '0.1.0',
+      requires = {'nvim-lua/plenary.nvim'}
+    }
+
+    use {
+      'nvim-telescope/telescope-fzf-native.nvim',
+      run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+    }
+
+    use {
+      'nvim-lualine/lualine.nvim',
+      requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    }
+
+    use {
+      'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'
+    }
+
+    use {
+      'ziglang/zig.vim'
+    }
+
+    use { 'neovim/nvim-lspconfig' }
+    use { 'nvim-lua/lsp_extensions.nvim' }
+    use { 'hrsh7th/cmp-nvim-lsp' }
+    use { 'hrsh7th/cmp-buffer' }
+    use { 'hrsh7th/cmp-path' }
+    use { 'hrsh7th/nvim-cmp' }
+    use { 'hrsh7th/cmp-vsnip' }
+    use { 'hrsh7th/vim-vsnip' }
+    use { 'ray-x/lsp_signature.nvim' }
+end)
+
+-- Meliora
+require('meliora').setup({
+    dim_inactive = false,
+    neutral = false,
+    styles = {
+        comments     = 'italic',
+        conditionals = 'italic',
+        loops        = 'italic',
+        folds        = 'NONE',
+        functions    = 'NONE',
+        keywords     = 'NONE',
+        strings      = 'NONE',
+        variables    = 'NONE',
+        numbers      = 'NONE',
+        booleans     = 'NONE',
+        properties   = 'NONE',
+        types        = 'NONE',
+        operators    = 'NONE',
+    },
+    plugins = {
+        telescope = {
+            enabled = true,
+            nvchad_like = true,
+        },
+    },
+})
+
+-- nvim-treesitter
 require('nvim-treesitter.configs').setup {
     highlight = {
         enable = true,
     }
 }
-END
 
-" =============================================================================
-" # LSP configuration
-" =============================================================================
+-- lualine
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'gruvbox-material',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
 
-lua << END
+
+-- =============================================================================
+-- # LSP configuration
+-- =============================================================================
+
 local cmp = require'cmp'
-
 local lspconfig = require'lspconfig'
-local root_pattern = require'lspconfig'.util.root_pattern
 
 cmp.setup({
   snippet = {
@@ -135,14 +196,13 @@ local on_attach = function(client, bufnr)
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD',       '<Cmd>lua vim.lsp.buf.declaration()<CR>',         opts)
   buf_set_keymap('n', 'gd',       '<Cmd>lua vim.lsp.buf.definition()<CR>',          opts)
+  buf_set_keymap('n', 'gr',       '<cmd>lua vim.lsp.buf.references()<CR>',          opts)
   buf_set_keymap('n', 'K',        '<Cmd>lua vim.lsp.buf.hover()<CR>',               opts)
   buf_set_keymap('n', '<C-k>',    '<cmd>lua vim.lsp.buf.signature_help()<CR>',      opts)
   buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>',              opts)
-  buf_set_keymap('n', 'gr',       '<cmd>lua vim.lsp.buf.references()<CR>',          opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>',       opts)
   buf_set_keymap('n', '[d',       '<cmd>lua vim.diagnostic.goto_prev()<CR>',        opts)
   buf_set_keymap('n', ']d',       '<cmd>lua vim.diagnostic.goto_next()<CR>',        opts)
-  buf_set_keymap("n", "<space>f", '<cmd>lua vim.lsp.buf.format {async = true}<CR>', opts)
 
   -- Get signatures (and _only_ signatures) when in argument lists.
   require "lsp_signature".on_attach({
@@ -155,29 +215,43 @@ end
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-lspconfig.rust_analyzer.setup {
-  on_attach = on_attach,
-  flags = {
-    debounce_text_changes = 150,
-  },
-  settings = {
-    ["rust-analyzer"] = {
-      cargo = {
-        allFeatures = true,
-      },
-      completion = {
-        postfix = {
-          enable = false,
-        },
-      },
-    },
-  },
-  capabilities = capabilities,
-}
-
+-- Zig server (zls)
 lspconfig.zls.setup {
     on_attach = on_attach,
 }
+
+-- C/C++ server (clangd)
+lspconfig.clangd.setup {
+    on_attack = on_attach,
+    cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--suggest-missing-includes"
+    },
+    filetypes = {"c", "cpp"},
+}
+
+-- Rust server (rust_analyzer)
+lspconfig.rust_analyzer.setup({
+    on_attach=on_attach,
+    flags = {
+        debounce_text_changes = 150
+    },
+    settings = {
+        ["rust-analyzer"]  = {
+            cargo = {
+                allFeatures = true,
+            },
+            completion = {
+                postfix = {
+                    enable = false,
+                },
+            },
+        },
+    },
+    capabilities = capabilities,
+})
 
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -190,8 +264,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 
 -- Tree sitter config
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "glsl", "go", "make", "markdown", "python", "rust", "toml", "yaml", "zig" },
-  sync_install = false,
+  ensure_installed = { "c", "cpp", "glsl", "go", "hlsl", "lua", "make", "markdown", "python", "rust", "toml", "vim", "yaml", "zig" },
+  sync_install = true,
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
@@ -199,19 +273,19 @@ require'nvim-treesitter.configs'.setup {
 }
 END
 
-" Enable type inlay hints
-autocmd CursorHold,CursorHoldI *.rs *.zig:lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
+" =============================================================================
+" # Editor settings
+" =============================================================================
 
-" Completion
 " Better completion
-" menuone: popup even when there's only one match
+" menuone: Popup even when there's only one match
 " noinsert: Do not insert text until a selection is made
 " noselect: Do not select, force user to select one from the menu
 set completeopt=menuone,noinsert,noselect
 
-" =============================================================================
-" # Editor settings
-" =============================================================================
+" Appearance
+color meliora
+set mouse=a
 
 set encoding=utf-8
 set timeoutlen=1000
@@ -267,8 +341,9 @@ nnoremap <silent> <Leader>q :q<CR>
 vnoremap <silent> <Leader><CR> :nohl<CR>
 nnoremap <silent> <Leader><CR> :nohl<CR>
 
-nmap <silent> <Leader>t :Files<CR>
-nmap <silent> <Leader>h :Ag<CR>
+nnoremap <silent> <Leader>t <CMD>Telescope find_files<CR>
+nnoremap <silent> <Leader>h <CMD>Telescope live_grep<CR>
+nnoremap <silent> <Leader>l <CMD>Telescope buffers<CR>
 
 " =============================================================================
 " # GUI settings
@@ -284,6 +359,7 @@ set synmaxcol=500
 set laststatus=2
 set relativenumber              " Relative line numbers
 set number                      " Also show current absolute line
+set cursorline
 set diffopt+=iwhite             " No whitespace in vimdiff
 set diffopt+=algorithm:patience
 set diffopt+=indent-heuristic
@@ -293,7 +369,10 @@ set shortmess+=c                " don't give |ins-completion-menu| messages.
 " =============================================================================
 " # Autocommands
 " =============================================================================
-let g:zig_fmt_autosave = 1
+let g:zig_fmt_autosave=1
+
+" Highlight line yanking
+au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=75}
 
 " Don't auto-insert comments on newline
 autocmd BufEnter * set fo-=c fo-=r fo-=o
