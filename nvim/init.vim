@@ -26,7 +26,6 @@ endif
 " # Plugin settings
 " =============================================================================
 
-" Lightline
 lua << END
 -- packer
 vim.cmd [[packadd packer.nvim]]
@@ -52,23 +51,20 @@ require('packer').startup(function(use)
       requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
 
-    use {
-      'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'
-    }
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
-    use {
-      'ziglang/zig.vim'
-    }
+    use 'nvim-treesitter/nvim-treesitter-context'
 
-    use { 'neovim/nvim-lspconfig' }
-    use { 'nvim-lua/lsp_extensions.nvim' }
-    use { 'hrsh7th/cmp-nvim-lsp' }
-    use { 'hrsh7th/cmp-buffer' }
-    use { 'hrsh7th/cmp-path' }
-    use { 'hrsh7th/nvim-cmp' }
-    use { 'hrsh7th/cmp-vsnip' }
-    use { 'hrsh7th/vim-vsnip' }
-    use { 'ray-x/lsp_signature.nvim' }
+    use 'neovim/nvim-lspconfig'
+    use 'nvim-lua/lsp_extensions.nvim'
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'hrsh7th/cmp-buffer'
+    use 'hrsh7th/cmp-path'
+    use 'hrsh7th/nvim-cmp'
+    use 'hrsh7th/cmp-vsnip'
+    use 'hrsh7th/vim-vsnip'
+    use 'ray-x/lsp_signature.nvim'
+    use 'ziglang/zig.vim'
 end)
 
 -- Meliora
@@ -79,30 +75,59 @@ require('meliora').setup({
         comments     = 'italic',
         conditionals = 'italic',
         loops        = 'italic',
-        folds        = 'NONE',
-        functions    = 'NONE',
-        keywords     = 'NONE',
-        strings      = 'NONE',
-        variables    = 'NONE',
-        numbers      = 'NONE',
-        booleans     = 'NONE',
-        properties   = 'NONE',
-        types        = 'NONE',
-        operators    = 'NONE',
     },
     plugins = {
         telescope = {
             enabled = true,
-            nvchad_like = true,
+            nvchad_like = false,
         },
     },
 })
 
 -- nvim-treesitter
 require('nvim-treesitter.configs').setup {
-    highlight = {
-        enable = true,
-    }
+  highlight = {
+    enable = true,
+    additional_vim_regex_highlighting = false,
+  },
+  indent = { enable = true, },
+  ensure_installed = {
+    "bash",
+    "c",
+    "cmake",
+    "cpp",
+    "cuda",
+    "fish",
+    "glsl",
+    "go",
+    "gomod",
+    "hlsl",
+    "lua",
+    "make",
+    "markdown",
+    "rust",
+    "sql",
+    "toml",
+    "vim",
+    "zig",
+  },
+}
+
+require('treesitter-context').setup {
+  enable = true,
+  max_line = 0,
+  trim_scope = 'outer',
+  patterns = {
+    default = {
+      'function',
+      'method',
+      'for',
+      'while',
+      'if',
+      'switch',
+      'case',
+    },
+  },
 }
 
 -- lualine
@@ -112,11 +137,6 @@ require('lualine').setup {
     theme = 'gruvbox-material',
     component_separators = { left = '', right = ''},
     section_separators = { left = '', right = ''},
-    disabled_filetypes = {
-      statusline = {},
-      winbar = {},
-    },
-    ignore_focus = {},
     always_divide_middle = true,
     globalstatus = false,
     refresh = {
@@ -134,17 +154,9 @@ require('lualine').setup {
     lualine_z = {'location'}
   },
   inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
     lualine_c = {'filename'},
     lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
   },
-  tabline = {},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = {}
 }
 
 
@@ -152,8 +164,10 @@ require('lualine').setup {
 -- # LSP configuration
 -- =============================================================================
 
-local cmp = require'cmp'
-local lspconfig = require'lspconfig'
+local cmp          = require('cmp')
+local lspconfig    = require('lspconfig')
+local util         = require('lspconfig/util')
+local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 cmp.setup({
   snippet = {
@@ -187,13 +201,10 @@ local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-  --Enable completion triggered by <c-x><c-o>
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  -- Mappings.
   local opts = { noremap=true, silent=true }
 
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
   buf_set_keymap('n', 'gD',       '<Cmd>lua vim.lsp.buf.declaration()<CR>',         opts)
   buf_set_keymap('n', 'gd',       '<Cmd>lua vim.lsp.buf.definition()<CR>',          opts)
   buf_set_keymap('n', 'gr',       '<cmd>lua vim.lsp.buf.references()<CR>',          opts)
@@ -213,16 +224,16 @@ local on_attach = function(client, bufnr)
   })
 end
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-
 -- Zig server (zls)
 lspconfig.zls.setup {
     on_attach = on_attach,
+    capabilites = capabilities,
 }
 
 -- C/C++ server (clangd)
 lspconfig.clangd.setup {
-    on_attack = on_attach,
+    on_attach = on_attach,
+    capabilites = capabilities,
     cmd = {
         "clangd",
         "--background-index",
@@ -233,26 +244,46 @@ lspconfig.clangd.setup {
 }
 
 -- Rust server (rust_analyzer)
-lspconfig.rust_analyzer.setup({
-    on_attach=on_attach,
-    flags = {
-        debounce_text_changes = 150
-    },
-    settings = {
-        ["rust-analyzer"]  = {
-            cargo = {
-                allFeatures = true,
-            },
-            completion = {
-                postfix = {
-                    enable = false,
-                },
-            },
+lspconfig.rust_analyzer.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  flags = {
+    debounce_text_changes = 150
+  },
+  settings = {
+    ["rust-analyzer"]  = {
+      cargo = {
+        allFeatures = true,
+      },
+      completion = {
+        postfix = {
+          enable = false,
         },
+      },
     },
-    capabilities = capabilities,
-})
+  },
+}
 
+-- Go server (gopls)
+lspconfig.gopls.setup {
+  on_attach = on_attach,
+  capabilities = capabilites,
+  cmd = { "gopls", "serve" },
+  filetypes = { "go", "gomod" },
+  root_dir = util.root_pattern("go.mod"),
+  settings = {
+    gopls = {
+      analyses = {
+        unusedparams = true,
+      },
+      staticcheck = true,
+      codelenses = {
+        tidy = true,
+      },
+      usePlaceholders = true,
+    },
+  },
+}
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
@@ -261,16 +292,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = true,
   }
 )
-
--- Tree sitter config
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "c", "cpp", "glsl", "go", "hlsl", "lua", "make", "markdown", "python", "rust", "toml", "vim", "yaml", "zig" },
-  sync_install = true,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-}
 END
 
 " =============================================================================
@@ -324,17 +345,17 @@ cnoremap %s/ %sm/
 map H ^
 map L $
 
-map <F1> <Esc>
-imap <F1> <Esc>
+map <F1> <Nop>
 map Q <Nop>
 nnoremap ; :
 
 nnoremap j gj
 nnoremap k gk
 
+nnoremap <silent> gn :bn!<CR>
+nnoremap <silent> gp :bp!<CR>
+
 nnoremap <silent> <Leader>d :bd!<CR>
-nnoremap <silent> <Leader>j :bp!<CR>
-nnoremap <silent> <Leader>k :bn!<CR>
 nnoremap <silent> <Leader>w :w<CR>
 nnoremap <silent> <Leader>q :q<CR>
 
@@ -369,16 +390,19 @@ set shortmess+=c                " don't give |ins-completion-menu| messages.
 " =============================================================================
 " # Autocommands
 " =============================================================================
+
+" On-save actions
 let g:zig_fmt_autosave=1
+autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
 
 " Highlight line yanking
-au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=75}
+au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=200}
 
 " Don't auto-insert comments on newline
 autocmd BufEnter * set fo-=c fo-=r fo-=o
 
 " Trim trailing whitespace on save
-autocmd BufWritePre * :%s/\s\+$//e
 
 " Jump to last edited line on file open
 if has("autocmd")
