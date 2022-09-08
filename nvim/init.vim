@@ -64,7 +64,6 @@ require('packer').startup(function(use)
     use 'hrsh7th/cmp-vsnip'
     use 'hrsh7th/vim-vsnip'
     use 'ray-x/lsp_signature.nvim'
-    use 'ziglang/zig.vim'
 end)
 
 -- Meliora
@@ -75,6 +74,7 @@ require('meliora').setup({
         comments     = 'italic',
         conditionals = 'italic',
         loops        = 'italic',
+        properties   = 'italic',
     },
     plugins = {
         telescope = {
@@ -207,6 +207,7 @@ local on_attach = function(client, bufnr)
 
   buf_set_keymap('n', 'gD',       '<Cmd>lua vim.lsp.buf.declaration()<CR>',         opts)
   buf_set_keymap('n', 'gd',       '<Cmd>lua vim.lsp.buf.definition()<CR>',          opts)
+  buf_set_keymap('n', 'gi',       '<Cmd>lua vim.lsp.buf.implementation()<CR>',      opts)
   buf_set_keymap('n', 'gr',       '<cmd>lua vim.lsp.buf.references()<CR>',          opts)
   buf_set_keymap('n', 'K',        '<Cmd>lua vim.lsp.buf.hover()<CR>',               opts)
   buf_set_keymap('n', '<C-k>',    '<cmd>lua vim.lsp.buf.signature_help()<CR>',      opts)
@@ -392,9 +393,10 @@ set shortmess+=c                " don't give |ins-completion-menu| messages.
 " =============================================================================
 
 " On-save actions
-let g:zig_fmt_autosave=1
 autocmd BufWritePre * :%s/\s\+$//e
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
+autocmd BufWritePre *.rs lua vim.lsp.buf.formatting()
+autocmd BufWritePre *.zig lua vim.lsp.buf.formatting()
 
 " Highlight line yanking
 au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=200}
