@@ -2,8 +2,9 @@
     "customizeUI.activityBar": "regular",
     "customizeUI.activityBarHideSettings": true,
     "customizeUI.stylesheet": {
-        ".windows": "font-family: Fira Code Retina",
+        ".editor-actions .monaco-toolbar": "display: none",
         ".sidebar.left .monaco-toolbar": "display: none",
+        ".windows": "font-family: Fira Code Retina",
     }, 
     "editor.bracketPairColorization.enabled": false,
     "editor.folding": false,
