@@ -29,14 +29,20 @@
     "editor.semanticHighlighting.enabled": true,
     "editor.semanticTokenColorCustomizations": {
         "rules": {
-            "keyword.controlFlow": {
-                "fontStyle": "italic",
-            },
             "*.mutable": {
                 "fontStyle": "italic",
             },
+            "comment": {
+                "fontStyle": "italic"
+            },
             "keyword": {
                 "fontStyle": "",
+            },
+            "keyword.controlFlow": {
+                "fontStyle": "italic",
+            },
+            "macro": {
+                "foreground": "#DA9C56"
             },
             "operator": {
                 "fontStyle": "",
@@ -52,13 +58,18 @@
     "gopls": {
         "ui.semanticTokens": true,
     },
-    "remote.SSH.remotePlatform": {
-        "parade": "linux",
-        "paragon": "linux"
-    },
+    "remotefs.remote": {
+        "": {
+            "scheme": "",
+            "username": "",
+            "host": "",
+            "port": ,
+	    "privateKeyPath": "",
+            "rootPath": "",
+        },
+    },  
     "security.workspace.trust.enabled": false,
     "telemetry.telemetryLevel": "off",
-    "terminal.integrated.defaultProfile.windows": "",
     "terminal.integrated.fontFamily": "Fira Code Retina",
     "terminal.integrated.fontSize": 17,
     "vim.enableNeovim": true,
@@ -79,24 +90,36 @@
                 "editor.action.peekDefinition"
             ],
         },
+        {
+            "before": [
+                "<Leader>",
+                "r",
+            ],
+            "commands": [
+                "editor.action.rename"
+            ],
+        },
     ],
     "vim.vimrc.enable": true,
     "vim.vimrc.path": "",
     "vim.smartRelativeLine": true,
     "window.menuBarVisibility": "toggle",
     "window.restoreWindows": "none",
-    "window.zoomLevel": -0.5,
+    "window.zoomLevel": ,
     "workbench.colorCustomizations": {
         "[Kanagawa]": {
-            "editorCursor.background": "#1F1F28",
-            "editorGroupHeader.tabsBackground": "#1F1F28",
+            "editor.background": "#1C1C26",
+            "editorCursor.background": "#1C1C26",
+            "editorGroupHeader.tabsBackground": "#1C1C26",
             "focusBorder": "#0000",
+            "sideBar.background": "#1F1F28",
             "scrollbar.shadow": "#0000",
-            "titleBar.activeBackground": "#1F1F28",
+            "titleBar.activeBackground": "#1C1C26",
         },
     },
     "workbench.activityBar.visible": false,
     "workbench.colorTheme": "Kanagawa",
+    "workbench.editor.decorations.badges": false,
     "workbench.editor.enablePreview": false,
     "workbench.editor.tabCloseButton": "off",
     "workbench.editor.untitled.hint": "hidden",
