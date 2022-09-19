@@ -12,16 +12,6 @@ if (has('termguicolors'))
   set termguicolors
 endif
 
-if exists("g:neovide")
-    let g:neovide_refresh_rate=60
-    let g:neovide_scroll_animation_length=0.05
-    let g:neovide_cursor_animation_length=0.05
-    let g:neovide_cursor_trail_length=0.05
-    let g:neovide_cursor_antialiasing=v:true
-
-    set guifont=Fira\ Code\ Retina:h13
-endif
-
 " =============================================================================
 " # Plugin settings
 " =============================================================================
@@ -31,10 +21,6 @@ lua << END
 vim.cmd [[packadd packer.nvim]]
 
 require('packer').startup(function(use)
-    use {
-      'meliora-theme/neovim',
-      requires = {'rktjmp/lush.nvim'}
-    }
 
     use {
       'nvim-telescope/telescope.nvim', tag = '0.1.0',
@@ -44,11 +30,6 @@ require('packer').startup(function(use)
     use {
       'nvim-telescope/telescope-fzf-native.nvim',
       run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
-    }
-
-    use {
-      'nvim-lualine/lualine.nvim',
-      requires = { 'kyazdani42/nvim-web-devicons', opt = true }
     }
 
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
@@ -64,25 +45,13 @@ require('packer').startup(function(use)
     use 'hrsh7th/cmp-vsnip'
     use 'hrsh7th/vim-vsnip'
     use 'ray-x/lsp_signature.nvim'
-end)
 
--- Meliora
-require('meliora').setup({
-    dim_inactive = false,
-    neutral = false,
-    styles = {
-        comments     = 'italic',
-        conditionals = 'italic',
-        loops        = 'italic',
-        properties   = 'italic',
-    },
-    plugins = {
-        telescope = {
-            enabled = true,
-            nvchad_like = false,
-        },
-    },
-})
+    use {
+      'meliora-theme/neovim',
+      requires = 'rktjmp/lush.nvim'
+    }
+
+end)
 
 -- nvim-treesitter
 require('nvim-treesitter.configs').setup {
@@ -130,35 +99,9 @@ require('treesitter-context').setup {
   },
 }
 
--- lualine
-require('lualine').setup {
-  options = {
-    icons_enabled = true,
-    theme = 'gruvbox-material',
-    component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
-    always_divide_middle = true,
-    globalstatus = false,
-    refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
-    }
-  },
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
-  inactive_sections = {
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-  },
-}
+require('telescope').setup {
 
+}
 
 -- =============================================================================
 -- # LSP configuration
@@ -293,6 +236,38 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = true,
   }
 )
+
+require 'meliora'.setup({
+    dim_inactive = false,
+    neutral = false, -- set this to `true` for neutral background and greys.
+    styles = {
+        comments = 'italic',
+        conditionals = 'italic',
+        properties = 'italic',
+        loops = 'italic',
+        folds = 'NONE',
+        functions = 'NONE',
+        keywords = 'NONE',
+        strings = 'NONE',
+        variables = 'NONE',
+        numbers = 'NONE',
+        booleans = 'NONE',
+        types = 'NONE',
+        operators = 'NONE',
+    },
+    plugins = {
+        cmp = true,
+        nvim_tree = {
+            enabled = true,
+            show_root = false,
+        },
+        telescope = {
+            enabled = true,
+            nvchad_like = false,
+        },
+    }
+})
+
 END
 
 " =============================================================================
@@ -381,7 +356,6 @@ set synmaxcol=500
 set laststatus=2
 set relativenumber              " Relative line numbers
 set number                      " Also show current absolute line
-set cursorline
 set diffopt+=iwhite             " No whitespace in vimdiff
 set diffopt+=algorithm:patience
 set diffopt+=indent-heuristic
@@ -393,10 +367,9 @@ set shortmess+=c                " don't give |ins-completion-menu| messages.
 " =============================================================================
 
 " On-save actions
+let g:zig_fmt_autosave=1
 autocmd BufWritePre * :%s/\s\+$//e
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
-autocmd BufWritePre *.rs lua vim.lsp.buf.formatting()
-autocmd BufWritePre *.zig lua vim.lsp.buf.formatting()
 
 " Highlight line yanking
 au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=200}

@@ -1,11 +1,5 @@
 alias vim="nvim"
 
-if status --is-interactive
-	if ! set -q TMUX
-		exec tmux
-	end
-end
-
 if command -v exa > /dev/null
 	abbr -a l 'exa'
 	abbr -a ls 'exa'
@@ -32,11 +26,11 @@ function d
 	end
 end
 
-function check_updates
+function check-updates
   sudo apt-get update && apt list --upgradeable
 end
 
-function install_updates
+function install-updates
   sudo apt-get update && sudo apt-get upgrade -y
 end
 
@@ -61,9 +55,29 @@ setenv FZF_DEFAULT_COMMAND 'fd --type file --follow'
 setenv FZF_CTRL_T_COMMAND 'fd --type file --follow'
 setenv FZF_DEFAULT_OPTS '--height 20%'
 
-# Fish should not add things to clipboard when killing
-# See https://github.com/fish-shell/fish-shell/issues/772
+setenv EDITOR nvim
+setenv BROWSER firefox
+
 set FISH_CLIPBOARD_CMD "cat"
+
+# Configs
+setenv SXHKD_SHELL '/usr/bin/fish'
+
+# Environment-local
+# setenv CARGO_TARGET_DIR 'home/pip/.cargo-target'
+
+# Rust stuff
+set CARGO_INCREMENTAL 1
+set RUSTFLAGS '-C target-cpu=native'
+set RUST_BACKTRACE 1
+set LESS '-F -X -R'
+
+fish_add_path /home/pip/bin
+fish_add_path /home/pip/.cargo/bin
+fish_add_path /home/pip/.cargo-target/release
+fish_add_path /home/pip/.local/bin
+fish_add_path /home/pip/.local/zig
+
 
 function fish_prompt
 	set_color brblack
@@ -133,7 +147,7 @@ function fish_greeting
 	echo -e " \e[1mTODOs\e[0;32m"
   echo
 
-	if test -s ~/.todo
+	if test -s /home/pip/.todo
 		set_color magenta
 		cat .todo | sed 's/^/\t/'
 		echo
