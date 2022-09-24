@@ -11,7 +11,7 @@ bspc config borderless_monocle true
 bspc config gapless_monocle    true
 
 bspc config normal_border_color  \#3c3836
-bspc config focused_border_color \#694a1b
+bspc config focused_border_color \#a49db9
 
 bspc config click_to_focus false
 bspc config focus_follows_pointer on
@@ -20,6 +20,7 @@ bspc config focus_follows_pointer on
 redshift -l 39:21 -t 6500:3500 &
 unclutter &
 sxhkd &
+lxpolkit &
 
 setxkbmap -option grp:alt_shift_toggle us,gr &
 

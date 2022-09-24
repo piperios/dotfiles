@@ -3,7 +3,7 @@ background = #222
 background-alt = #444
 foreground = #dfdfdf
 foreground-alt = #888
-primary = #ffb52a
+primary = #b494af
 secondary = #e60053
 alert = #bd2c40
 
@@ -52,10 +52,10 @@ enable-click = false
 enable-scroll = false
 
 label-focused = " %name% "
-label-focused-underline = #fba922
+label-focused-underline = #b494af
 
 label-occupied = " %name% "
-label-occupied-foreground = #ffaa00
+label-occupied-foreground = #b494af
 
 label-urgent = " %name% "
 label-urgent-underline = #9b0a20
@@ -68,7 +68,7 @@ type = internal/cpu
 interval = 2
 format-prefix = "CPU "
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #f90000
+format-underline = #945353
 label = %percentage:2%%
 
 [module/memory]
@@ -76,7 +76,7 @@ type = internal/memory
 interval = 2
 format-prefix = "RAM "
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #4bffdc
+format-underline = #727246
 label = %percentage_used:2%%
 
 [module/eth1]
@@ -84,7 +84,7 @@ type = internal/network
 interface = enp39s0
 interval = 3.0
 
-format-connected-underline = #55aa55
+format-connected-underline = #9e96b6
 format-connected-prefix = "🖧 "
 format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
@@ -103,7 +103,7 @@ time-alt = %I:%M%p
 
 format-prefix =
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #0a6cf5
+format-underline = #cdab89
 
 label = %date% %time%
 
