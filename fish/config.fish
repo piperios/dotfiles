@@ -1,5 +1,3 @@
-alias vim="nvim"
-
 if command -v exa > /dev/null
 	abbr -a l 'exa'
 	abbr -a ls 'exa'
@@ -13,8 +11,9 @@ else
 	abbr -a lla 'ls -la'
 end
 
-abbr -a e 'nvim'
-abbr -a - 'd'
+if command -v rg > /dev/null
+    abbr -a grep 'rg'
+end
 
 # Type - to move up to top parent dir which is a repository
 function d
@@ -27,11 +26,15 @@ function d
 end
 
 function check-updates
-  sudo apt-get update && apt list --upgradeable
+  sudo pacman -Syup
 end
 
 function install-updates
-  sudo apt-get update && sudo apt-get upgrade -y
+  sudo pacman -Syu
+end
+
+function remove-orphaned
+  sudo pacman -Qtdq | sudo pacman -Rns -
 end
 
 # Fish git prompt
@@ -55,16 +58,19 @@ setenv FZF_DEFAULT_COMMAND 'fd --type file --follow'
 setenv FZF_CTRL_T_COMMAND 'fd --type file --follow'
 setenv FZF_DEFAULT_OPTS '--height 20%'
 
+setenv _JAVA_AWT_WM_NONREPARENTING 1
+
 setenv EDITOR nvim
 setenv BROWSER firefox
+
+setenv CC clang
+setenv CXX clang++
+setenv GOPATH '/home/pip/.local/share/go'
 
 set FISH_CLIPBOARD_CMD "cat"
 
 # Configs
 setenv SXHKD_SHELL '/usr/bin/fish'
-
-# Environment-local
-# setenv CARGO_TARGET_DIR 'home/pip/.cargo-target'
 
 # Rust stuff
 set CARGO_INCREMENTAL 1
@@ -78,12 +84,13 @@ fish_add_path /home/pip/.cargo-target/release
 fish_add_path /home/pip/.local/bin
 fish_add_path /home/pip/.local/zig
 
+abbr -a e 'nvim'
 
 function fish_prompt
 	set_color brblack
 	echo -n "["(date "+%H:%M")"] "
 	set_color blue
-	echo -n (hostname)
+	echo -n (prompt_hostname)
 	if [ $PWD != $HOME ]
 		set_color brblack
 		echo -n ':'
@@ -157,4 +164,3 @@ function fish_greeting
 end
 
 fish_ssh_agent
-

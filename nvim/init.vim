@@ -46,9 +46,11 @@ require('packer').startup(function(use)
     use 'hrsh7th/vim-vsnip'
     use 'ray-x/lsp_signature.nvim'
 
+    use 'lukas-reineke/indent-blankline.nvim'
+
     use {
       'meliora-theme/neovim',
-      requires = 'rktjmp/lush.nvim'
+      requires = { 'rktjmp/lush.nvim' }
     }
 
 end)
@@ -84,7 +86,7 @@ require('nvim-treesitter.configs').setup {
 
 require('treesitter-context').setup {
   enable = true,
-  max_line = 0,
+  max_lines = 3,
   trim_scope = 'outer',
   patterns = {
     default = {
@@ -99,8 +101,22 @@ require('treesitter-context').setup {
   },
 }
 
-require('telescope').setup {
-
+require('meliora').setup {
+  neutral = true,
+  dim_inactive = false,
+  styles = {
+    comments = 'italic',
+    conditionals = 'italic',
+    loops = 'italic',
+  },
+  plugings = {
+    cmp = true,
+    indent_blankline = true,
+    telescope = {
+        enabled = true,
+        nvchad_like = true,
+    },
+  }
 }
 
 -- =============================================================================
@@ -182,7 +198,8 @@ lspconfig.clangd.setup {
         "clangd",
         "--background-index",
         "--clang-tidy",
-        "--suggest-missing-includes"
+        "--header-insertion=iwyu",
+        "--malloc-trim",
     },
     filetypes = {"c", "cpp"},
 }
@@ -229,6 +246,7 @@ lspconfig.gopls.setup {
   },
 }
 
+-- LSP warning display
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     virtual_text = true,
@@ -236,37 +254,6 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     update_in_insert = true,
   }
 )
-
-require 'meliora'.setup({
-    dim_inactive = false,
-    neutral = false, -- set this to `true` for neutral background and greys.
-    styles = {
-        comments = 'italic',
-        conditionals = 'italic',
-        properties = 'italic',
-        loops = 'italic',
-        folds = 'NONE',
-        functions = 'NONE',
-        keywords = 'NONE',
-        strings = 'NONE',
-        variables = 'NONE',
-        numbers = 'NONE',
-        booleans = 'NONE',
-        types = 'NONE',
-        operators = 'NONE',
-    },
-    plugins = {
-        cmp = true,
-        nvim_tree = {
-            enabled = true,
-            show_root = false,
-        },
-        telescope = {
-            enabled = true,
-            nvchad_like = false,
-        },
-    }
-})
 
 END
 
@@ -281,6 +268,7 @@ END
 set completeopt=menuone,noinsert,noselect
 
 " Appearance
+set background=dark
 color meliora
 set mouse=a
 
@@ -367,17 +355,15 @@ set shortmess+=c                " don't give |ins-completion-menu| messages.
 " =============================================================================
 
 " On-save actions
-let g:zig_fmt_autosave=1
 autocmd BufWritePre * :%s/\s\+$//e
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
+autocmd BufWritePre *.rs lua vim.lsp.buf.formatting()
 
 " Highlight line yanking
 au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=200}
 
 " Don't auto-insert comments on newline
 autocmd BufEnter * set fo-=c fo-=r fo-=o
-
-" Trim trailing whitespace on save
 
 " Jump to last edited line on file open
 if has("autocmd")

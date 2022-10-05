@@ -9,14 +9,18 @@ window:
 
 font:
   normal:
-    family: Fira Code
-    style: Retina
+    family: Iosevka SS04
+    style: Medium
 
-  italics:
-    family: Fira Code
-    style: Retina
+  italic:
+    family: Iosevka SS04
+    style: Medium Italic
 
-  size: 12
+  bold:
+    family: Iosevka SS04
+    style: Bold
+
+  size: 13.5
 
 colors:
   # Default colors
@@ -32,7 +36,7 @@ colors:
     black:   '#1d1d1d'
     red:     '#f2513f'
     green:   '#b8bb26'
-    yellow:  '#f0ba3e'
+    yellow:  '#edbd4e'
     blue:    '#83a598'
     magenta: '#d3869b'
     cyan:    '#8ec07c'
@@ -43,7 +47,7 @@ colors:
     black:   '#665c54'
     red:     '#f2513f'
     green:   '#b8bb26'
-    yellow:  '#f0ba3e'
+    yellow:  '#edbd4e'
     blue:    '#83a598'
     magenta: '#d3869b'
     cyan:    '#8ec07c'

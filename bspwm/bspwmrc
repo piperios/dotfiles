@@ -4,7 +4,7 @@ xrandr --output HDMI-0 --primary
 bspc monitor HDMI-0 -d I II III IV V
 
 bspc config border_width 1
-bspc config window_gap   8
+bspc config window_gap   4
 
 bspc config split_ratio        0.5
 bspc config borderless_monocle true
@@ -21,7 +21,9 @@ redshift -l 39:21 -t 6500:3500 &
 unclutter &
 sxhkd &
 lxpolkit &
+ulauncher --hide-window --no-window-shadow &
+dunst &
 
-setxkbmap -option grp:alt_shift_toggle us,gr &
+setxkbmap -option grp:rctrl_rshift_toggle us,gr &
 
 ~/.config/ui-update.sh &

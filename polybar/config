@@ -10,25 +10,25 @@ alert = #bd2c40
 [bar/main]
 monitor = HDMI-0
 width = 100%
-height = 1.5%
+height = 1.75%
 radius = 6.0
-fixed-center = false
+fixed-center = true
 bottom = false
 
 background = ${colors.background}
 foreground = ${colors.foreground}
 
 border-size = 0
-line-size = 2
-padding = 0
+line-size = 3
+padding = 1
 module-margin = 1
 
-font-0 = "Noto Sans Mono:size=11;1"
-font-1 = "Noto Sans Mono:size=11;1"
-font-2 = "Noto Sans Symbols:size=10;1"
-font-3 = "Noto Sans Symbols2:size=10;1"
+font-0 = "Noto Sans Mono:size=13;1"
+font-1 = "Noto Sans Mono:size=13;1"
+font-2 = "Noto Sans Symbols:size=13;1"
+font-3 = "Noto Sans Symbols2:size=13;1"
 
-modules-left = bspwm xwindow
+modules-left = bspwm
 modules-center = date
 modules-right = eth1 memory cpu
 
@@ -66,7 +66,7 @@ label-empty-foreground = #555555
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = "CPU "
+format-prefix = "💻 "
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #945353
 label = %percentage:2%%
@@ -74,7 +74,7 @@ label = %percentage:2%%
 [module/memory]
 type = internal/memory
 interval = 2
-format-prefix = "RAM "
+format-prefix = "🗍 "
 format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #727246
 label = %percentage_used:2%%

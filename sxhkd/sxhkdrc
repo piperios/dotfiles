@@ -12,12 +12,11 @@ super + space
 
 # lock pc
 super + Escape
-  i3lock -e -i ~/.config/lock.png
+  i3lock -e -i ~/.config/wallpapers/lock.png
 
 # Browser
 super + e
 	firefox
-
 
 #
 # bspwm hotkeys
