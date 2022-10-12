@@ -4,11 +4,11 @@
 
 # terminal emulator
 super + Return
-	alacritty
+	st
 
-# program launcher
+# Dmenu
 super + space
-	rofi -show combi
+    dmenu_run -fn 'Noto Sans Mono-12'
 
 # lock pc
 super + Escape
@@ -25,6 +25,10 @@ super + e
 # quit bspwm normally
 super + alt + Escape
 	bspc quit
+
+# Reload sxhkdrc
+super + shift + r
+    pkill -usr1 -x sxhkd; notify-send 'sxhkd' 'Reloaded config'
 
 # close and kill
 super + {_,shift + }w
@@ -57,6 +61,10 @@ super + ctrl + {x,y,z}
 #
 # focus/swap
 #
+
+# Move current node to pre-highlighted node
+super + shift + m
+	bspc node -n last.!automatic
 
 # focus the node in the given direction
 super + {_,shift + }{h,j,k,l}

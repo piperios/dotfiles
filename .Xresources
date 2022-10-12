@@ -1,28 +1,26 @@
-XTerm*termName: xterm-256color
-XTerm*locale: true
-XTerm*faceName: Noto Sans Mono
-XTerm*faceSize: 13
-XTerm*selectToClipboard: true
-XTerm*cursorBlink: true
-XTerm*ScrollBar: false
+Xft.dpi: 150
+Xft.antialias: 1
 
-XTerm*background:  #1d2021
-XTerm*foreground:  #d5c4a1
-XTerm*cursorColor: #d5c4a1
+*.font:     Iosevka SS04 Medium-14.5
+*.boldFont: Iosevka SS04 Bold-14.5
 
-XTerm*color0:  #1d2021
-XTerm*color1:  #f2513f
-XTerm*color2:  #b8bb26
-XTerm*color3:  #f0ba3e
-XTerm*color4:  #83a598
-XTerm*color5:  #d3869b
-XTerm*color6:  #8ec07c
-XTerm*color7:  #d5c4a1
-XTerm*color8:  #665c54
-XTerm*color9:  #f2513f
-XTerm*color10: #b8bb26
-XTerm*color11: #f0ba3e
-XTerm*color12: #83a598
-XTerm*color13: #d3869b
-XTerm*color14: #8ec07c
-XTerm*color15: #e0d7b1
+*.background:  #1d1d1d
+*.foreground:  #d5c4a1
+*.cursorColor: #d5c4a1
+
+*.color0:  #1d1d1d
+*.color1:  #f2513f
+*.color2:  #b8bb26
+*.color3:  #edbd4e
+*.color4:  #83a598
+*.color5:  #d3869b
+*.color6:  #8ec07c
+*.color7:  #d5c4a1
+*.color8:  #665c54
+*.color9:  #f2513f
+*.color10: #b8bb26
+*.color11: #edbd4e
+*.color12: #83a598
+*.color13: #d3869b
+*.color14: #8ec07c
+*.color15: #e0d7b1

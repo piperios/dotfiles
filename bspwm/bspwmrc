@@ -21,7 +21,6 @@ redshift -l 39:21 -t 6500:3500 &
 unclutter &
 sxhkd &
 lxpolkit &
-ulauncher --hide-window --no-window-shadow &
 dunst &
 
 setxkbmap -option grp:rctrl_rshift_toggle us,gr &
