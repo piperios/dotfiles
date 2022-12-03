@@ -8,10 +8,6 @@ if has('nvim')
     noremap <C-q> :confirm qall<CR>
 end
 
-if (has('termguicolors'))
-  set termguicolors
-endif
-
 " =============================================================================
 " # Plugin settings
 " =============================================================================
@@ -22,37 +18,18 @@ vim.cmd [[packadd packer.nvim]]
 
 require('packer').startup(function(use)
 
-    use {
-      'nvim-telescope/telescope.nvim', tag = '0.1.0',
-      requires = {'nvim-lua/plenary.nvim'}
-    }
+    use 'nvim-lua/plenary.nvim'
 
+    use 'nvim-telescope/telescope.nvim'
     use {
       'nvim-telescope/telescope-fzf-native.nvim',
       run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
     }
 
+    use 'sindrets/diffview.nvim'
+
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-
     use 'nvim-treesitter/nvim-treesitter-context'
-
-    use 'neovim/nvim-lspconfig'
-    use 'nvim-lua/lsp_extensions.nvim'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-path'
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-vsnip'
-    use 'hrsh7th/vim-vsnip'
-    use 'ray-x/lsp_signature.nvim'
-
-    use 'lukas-reineke/indent-blankline.nvim'
-
-    use {
-      'meliora-theme/neovim',
-      requires = { 'rktjmp/lush.nvim' }
-    }
-
 end)
 
 -- nvim-treesitter
@@ -68,16 +45,14 @@ require('nvim-treesitter.configs').setup {
     "cmake",
     "cpp",
     "cuda",
-    "fish",
     "glsl",
     "go",
     "gomod",
-    "hlsl",
+    "llvm",
     "lua",
     "make",
     "markdown",
     "rust",
-    "sql",
     "toml",
     "vim",
     "zig",
@@ -101,159 +76,76 @@ require('treesitter-context').setup {
   },
 }
 
-require('meliora').setup {
-  neutral = true,
-  dim_inactive = false,
-  styles = {
-    comments = 'italic',
-    conditionals = 'italic',
-    loops = 'italic',
+local actions = require("diffview.actions")
+require("diffview").setup({
+  diff_binaries = false,    -- Show diffs for binaries
+  enhanced_diff_hl = false, -- See ':h diffview-config-enhanced_diff_hl'
+  git_cmd = { "git" },      -- The git executable followed by default args.
+  use_icons = false,        -- Requires nvim-web-devicons
+  watch_index = true,       -- Update views and index buffers when the git index changes.
+  signs = {
+    fold_closed = "O",
+    fold_open = "C",
+    done = "✓",
   },
-  plugings = {
-    cmp = true,
-    indent_blankline = true,
-    telescope = {
-        enabled = true,
-        nvchad_like = true,
+  view = {
+    -- Configure the layout and behavior of different types of views.
+    -- Available layouts:
+    --  'diff1_plain'
+    --    |'diff2_horizontal'
+    --    |'diff2_vertical'
+    --    |'diff3_horizontal'
+    --    |'diff3_vertical'
+    --    |'diff3_mixed'
+    --    |'diff4_mixed'
+    -- For more info, see ':h diffview-config-view.x.layout'.
+    default = {
+      -- Config for changed files, and staged files in diff views.
+      layout = "diff2_horizontal",
     },
-  }
-}
-
--- =============================================================================
--- # LSP configuration
--- =============================================================================
-
-local cmp          = require('cmp')
-local lspconfig    = require('lspconfig')
-local util         = require('lspconfig/util')
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-
-cmp.setup({
-  snippet = {
-    -- REQUIRED by nvim-cmp. get rid of it once we can
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
-    end,
+    merge_tool = {
+      -- Config for conflicted files in diff views during a merge or rebase.
+      layout = "diff3_horizontal",
+      disable_diagnostics = true,   -- Temporarily disable diagnostics for conflict buffers while in the view.
+    },
+    file_history = {
+      -- Config for changed files in file history views.
+      layout = "diff2_horizontal",
+    },
   },
-  mapping = {
-    ['<Tab>'] = cmp.mapping.confirm({ select = true })
+  file_panel = {
+    listing_style = "tree",             -- One of 'list' or 'tree'
+    tree_options = {                    -- Only applies when listing_style is 'tree'
+      flatten_dirs = true,              -- Flatten dirs that only contain one single dir
+      folder_statuses = "only_folded",  -- One of 'never', 'only_folded' or 'always'.
+    },
+    win_config = {                      -- See ':h diffview-config-win_config'
+      position = "left",
+      width = 35,
+      win_opts = {}
+    },
   },
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-  }, {
-    { name = 'path' },
-  }),
-  experimental = {
-    ghost_text = true,
+  file_history_panel = {
+    log_options = {   -- See ':h diffview-config-log_options'
+      single_file = {
+        diff_merges = "combined",
+      },
+      multi_file = {
+        diff_merges = "first-parent",
+      },
+    },
+    win_config = {    -- See ':h diffview-config-win_config'
+      position = "bottom",
+      height = 16,
+      win_opts = {}
+    },
+  },
+  commit_log_panel = {
+    win_config = {   -- See ':h diffview-config-win_config'
+      win_opts = {},
+    }
   },
 })
-
--- Enable completing paths in :
-cmp.setup.cmdline(':', {
-  sources = cmp.config.sources({
-    { name = 'path' }
-  })
-})
-
--- Setup lspconfig.
-local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  local opts = { noremap=true, silent=true }
-
-  buf_set_keymap('n', 'gD',       '<Cmd>lua vim.lsp.buf.declaration()<CR>',         opts)
-  buf_set_keymap('n', 'gd',       '<Cmd>lua vim.lsp.buf.definition()<CR>',          opts)
-  buf_set_keymap('n', 'gi',       '<Cmd>lua vim.lsp.buf.implementation()<CR>',      opts)
-  buf_set_keymap('n', 'gr',       '<cmd>lua vim.lsp.buf.references()<CR>',          opts)
-  buf_set_keymap('n', 'K',        '<Cmd>lua vim.lsp.buf.hover()<CR>',               opts)
-  buf_set_keymap('n', '<C-k>',    '<cmd>lua vim.lsp.buf.signature_help()<CR>',      opts)
-  buf_set_keymap('n', '<space>r', '<cmd>lua vim.lsp.buf.rename()<CR>',              opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>',       opts)
-  buf_set_keymap('n', '[d',       '<cmd>lua vim.diagnostic.goto_prev()<CR>',        opts)
-  buf_set_keymap('n', ']d',       '<cmd>lua vim.diagnostic.goto_next()<CR>',        opts)
-
-  -- Get signatures (and _only_ signatures) when in argument lists.
-  require "lsp_signature".on_attach({
-    doc_lines = 0,
-    handler_opts = {
-      border = "none"
-    },
-  })
-end
-
--- Zig server (zls)
-lspconfig.zls.setup {
-    on_attach = on_attach,
-    capabilites = capabilities,
-}
-
--- C/C++ server (clangd)
-lspconfig.clangd.setup {
-    on_attach = on_attach,
-    capabilites = capabilities,
-    cmd = {
-        "clangd",
-        "--background-index",
-        "--clang-tidy",
-        "--header-insertion=iwyu",
-        "--malloc-trim",
-    },
-    filetypes = {"c", "cpp"},
-}
-
--- Rust server (rust_analyzer)
-lspconfig.rust_analyzer.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  flags = {
-    debounce_text_changes = 150
-  },
-  settings = {
-    ["rust-analyzer"]  = {
-      cargo = {
-        allFeatures = true,
-      },
-      completion = {
-        postfix = {
-          enable = false,
-        },
-      },
-    },
-  },
-}
-
--- Go server (gopls)
-lspconfig.gopls.setup {
-  on_attach = on_attach,
-  capabilities = capabilites,
-  cmd = { "gopls", "serve" },
-  filetypes = { "go", "gomod" },
-  root_dir = util.root_pattern("go.mod"),
-  settings = {
-    gopls = {
-      analyses = {
-        unusedparams = true,
-      },
-      staticcheck = true,
-      codelenses = {
-        tidy = true,
-      },
-      usePlaceholders = true,
-    },
-  },
-}
-
--- LSP warning display
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = true,
-    signs = true,
-    update_in_insert = true,
-  }
-)
 
 END
 
@@ -262,16 +154,16 @@ END
 " =============================================================================
 
 " Better completion
-" menuone: Popup even when there's only one match
-" noinsert: Do not insert text until a selection is made
-" noselect: Do not select, force user to select one from the menu
+"     * menuone:  Popup even when there's only one match
+"     * noinsert: Do not insert text until a selection is made
+"     * noselect: Do not select, force user to select one from the menu
 set completeopt=menuone,noinsert,noselect
 
 " Appearance
+set t_Co=16
 set background=dark
-color meliora
-set mouse=a
 
+set mouse=a
 set encoding=utf-8
 set timeoutlen=1000
 set updatetime=300
@@ -312,6 +204,7 @@ map L $
 map <F1> <Nop>
 map Q <Nop>
 nnoremap ; :
+vnoremap ; :
 
 nnoremap j gj
 nnoremap k gk
@@ -326,7 +219,7 @@ nnoremap <silent> <Leader>q :q<CR>
 vnoremap <silent> <Leader><CR> :nohl<CR>
 nnoremap <silent> <Leader><CR> :nohl<CR>
 
-nnoremap <silent> <Leader>t <CMD>Telescope find_files<CR>
+nnoremap <silent> <Leader>f <CMD>Telescope find_files<CR>
 nnoremap <silent> <Leader>h <CMD>Telescope live_grep<CR>
 nnoremap <silent> <Leader>l <CMD>Telescope buffers<CR>
 
@@ -353,11 +246,10 @@ set shortmess+=c                " don't give |ins-completion-menu| messages.
 " =============================================================================
 " # Autocommands
 " =============================================================================
-
 " On-save actions
 autocmd BufWritePre * :%s/\s\+$//e
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
-autocmd BufWritePre *.rs lua vim.lsp.buf.formatting()
+" autocmd BufWritePre *.rs lua vim.lsp.buf.formatting()
 
 " Highlight line yanking
 au TextYankPost * silent! lua vim.highlight.on_yank {on_visual=false, timeout=200}
