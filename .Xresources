@@ -1,8 +1,8 @@
 Xft.dpi: 150
-Xft.antialias: 1
+!Xft.antialias: 1
 
-*.font:     Iosevka SS04 Medium-14.5
-*.boldFont: Iosevka SS04 Bold-14.5
+st.font:     Inconsolata Medium-15
+st.boldFont: Inconsolata Semibold-15
 
 *.background:  #1d1d1d
 *.foreground:  #d5c4a1
