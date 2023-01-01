@@ -8,7 +8,7 @@ super + Return
 
 # Dmenu
 super + space
-    dmenu_run -fn 'Noto Sans Mono-12'
+    dmenu_run -fn 'Noto Sans Mono-15'
 
 # lock pc
 super + Escape
@@ -17,6 +17,34 @@ super + Escape
 # Browser
 super + e
 	firefox
+
+# Mute mic
+XF86AudioMicMute
+    amixer set Capture toggle
+
+# Raise volume
+XF86AudioRaiseVolume
+	amixer -q set Master 5%+ on
+
+# Lower volume
+XF86AudioLowerVolume
+	amixer -q set Master 5%-
+
+# Mute audio
+XF86AudioMute
+	amixer -D pulse set Master 1+ toggle
+
+# Mute mic
+XF86AudioMicMute
+	amixer set Capture toggle
+
+# Decrease brightness
+XF86MonBrightnessDown
+    xbacklight -dec 10
+
+# Increase brightness
+XF86MonBrightnessUp
+    xbacklight -inc 10
 
 #
 # bspwm hotkeys
@@ -35,11 +63,11 @@ super + {_,shift + }w
 	bspc node -{c,k}
 
 # alternate between the tiled and monocle layout
-super + m
+super + y
 	bspc desktop -l next
 
 # if the current node is automatic, send it to the last manual, otherwise pull the last leaf
-super + y
+super + m
 	bspc query -N -n focused.automatic && bspc node -n last.!automatic || bspc node last.leaf -n focused
 
 # swap the current node and the biggest node
@@ -138,39 +166,3 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
-
-
-# CUSTOM
-super + shift + F2
-	~/.config/bspwm/bspwmrc
-
-# media
-XF86MonBrightnessDown
-    ./config/scripts/volume_down.sh
-
-XF86MonBrightnessUp
-    xbacklight -inc 10%
-
-# Raise volume
-XF86AudioRaiseVolume
-	amixer -q set Master 5%+ on
-
-# Lower volume
-XF86AudioLowerVolume
-	amixer -q set Master 5%-
-
-# Mute audio
-XF86AudioMute
-	amixer -q set Master off
-
-# Lower volume (alt)
-super + F1
-	amixer -q set Master 5%-
-
-# Raise volume (alt)
-super + F2
-	amixer -q set Master 5%+ on
-
-# Mute audio (alt)
-super + F3
-	amixer -q set Master off

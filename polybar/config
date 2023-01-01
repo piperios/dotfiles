@@ -8,9 +8,9 @@ secondary = #e60053
 alert = #bd2c40
 
 [bar/main]
-monitor = HDMI-0
+#monitor = HDMI-0
 width = 100%
-height = 1.75%
+height = 2.5%
 radius = 6.0
 fixed-center = true
 bottom = false
@@ -23,14 +23,15 @@ line-size = 3
 padding = 1
 module-margin = 1
 
-font-0 = "Noto Sans Mono:size=13;1"
-font-1 = "Noto Sans Mono:size=13;1"
-font-2 = "Noto Sans Symbols:size=13;1"
-font-3 = "Noto Sans Symbols2:size=13;1"
+font-0 = "Noto Sans Mono:size=18;1"
+font-1 = "Noto Sans Mono:size=18;1"
+font-2 = "Noto Sans Symbols:size=18;1"
+font-3 = "Noto Sans Symbols2:size=18;1"
+font-4 = "Noto Sans Emoji:size=18;1"
 
 modules-left = bspwm
 modules-center = date
-modules-right = eth1 memory cpu
+modules-right = pulseaudio backlight wlan memory cpu battery
 
 tray-position = right
 tray-padding = 2
@@ -103,9 +104,87 @@ time-alt = %I:%M%p
 
 format-prefix =
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #cdab89
+format-underline = #CDAB89
 
 label = %date% %time%
+
+[module/battery]
+type = internal/battery
+
+full-at=99
+low-at=15
+battery=BAT0
+adapter=AC
+
+poll-interval=5
+
+format-charging    = ⚡ <label-charging>
+format-discharging = ⚡ <label-discharging>
+format-full        = ⚡ <label-full>
+format-low         = ⚡ <label-low>
+
+format-charging-underline    = #DDD
+format-discharging-underline = #DDD
+format-full-underline        = #DDD
+format-low-underline         = #DDD
+
+label-charging    = %percentage%%
+label-discharging = %percentage%%
+label-full        = %percentage%%
+label-low         = %percentage%%
+
+[module/wlan]
+type = internal/network
+interface = wlan0
+interval = 5.0
+
+format-connected = <ramp-signal> <label-connected>
+format-connected-underline = #9F78E1
+label-connected = %essid%
+
+format-disconnected = 🌧 Discon.
+format-disconnected-underline = #9F78E1
+label-disconnected =
+
+ramp-signal-0 = 🌧
+ramp-signal-1 = 🌦
+ramp-signal-2 = 🌥
+ramp-signal-3 = 🌤
+ramp-signal-4 = 🌣
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+interval=5
+
+format-volume = <ramp-volume> <label-volume>
+format-volume-underline = #83A598
+
+label-muted = 🔇 muted
+label-muted-foreground = #666
+label-muted-underline = #83A598
+
+ramp-volume-0 = 🔈
+ramp-volume-1 = 🔉
+ramp-volume-2 = 🔊
+
+click-right = pavucontrol
+
+[module/backlight]
+type = internal/backlight
+
+card = intel_backlight
+use-actual-brightness = true
+
+format = <ramp> <label>
+format-underline = #666
+label = %percentage%%
+
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
 
 [settings]
 screenchange-reload = true
