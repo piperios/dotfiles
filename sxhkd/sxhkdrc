@@ -4,11 +4,11 @@
 
 # terminal emulator
 super + Return
-	st
+	alacritty
 
 # Dmenu
 super + space
-    dmenu_run -fn 'Noto Sans Mono-15'
+    dmenu_run -fn 'Inconsolata-16'
 
 # lock pc
 super + Escape
@@ -16,7 +16,10 @@ super + Escape
 
 # Browser
 super + e
-	firefox
+	librewolf
+
+super + shift + e
+	librewolf --private-window
 
 # Mute mic
 XF86AudioMicMute
