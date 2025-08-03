@@ -1,0 +1,10 @@
+cursor-style = block
+cursor-style-blink = true
+font-family = Iosevka Term
+font-size = 15
+font-thicken = true
+font-thicken-strength = 120
+macos-titlebar-proxy-icon = hidden
+mouse-hide-while-typing = true
+theme = vague
+title = "Ghostty"
