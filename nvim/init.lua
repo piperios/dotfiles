@@ -140,7 +140,7 @@ require('lazy').setup({
     config = function()
       require('lualine').setup {
         options = {
-          icons_enabled = false,
+          icons_enabled = true,
           theme = 'vague'
         }
       }
@@ -154,6 +154,7 @@ require('lazy').setup({
       local builtin = require('telescope.builtin') 
       vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = 'Telescope find files' })
       vim.keymap.set('n', '<leader>t', builtin.live_grep,  { desc = 'Telescope live grep' })
+      vim.keymap.set('n', '<leader>n', builtin.buffers,    { desc = 'Telescope list buffers' })
     end
   },
   -- Easy surround
@@ -192,6 +193,10 @@ require('lazy').setup({
   {
     'neovim/nvim-lspconfig',
     config = function()
+      -- C++
+      vim.lsp.config('clangd', { cmd = { '/opt/homebrew/opt/llvm/bin/clangd', '--background-index', '--clang-tidy' } })
+      vim.lsp.enable('clangd')
+
       -- Rust
       vim.lsp.config('rust_analyzer', {
         settings = {
@@ -206,12 +211,8 @@ require('lazy').setup({
       })
       vim.lsp.enable('rust_analyzer')
 
-      -- C++
-      vim.lsp.config('clangd', { cmd = { '/opt/homebrew/opt/llvm/bin/clangd', '--background-index', '--clang-tidy' } })
-      vim.lsp.enable('clangd')
-
       -- Global mappings.
-      vim.keymap.set('n',  '<leader>e',  vim.diagnostic.open_float)
+      vim.keymap.set('n',  '<Leader>e',  vim.diagnostic.open_float)
       vim.keymap.set('n',  '[d',         vim.diagnostic.goto_prev)
       vim.keymap.set('n',  ']d',         vim.diagnostic.goto_next)
 
@@ -234,13 +235,20 @@ require('lazy').setup({
           -- Split buffer and go to definition on the new split
           vim.keymap.set('n', '<C-w>gd', function() vim.cmd('vsplit') vim.lsp.buf.definition() end, opts)
 
-          local client = vim.lsp.get_client_by_id(ev.data.client_id)
-          if client.server_capabilities.inlayHintProvider then
-              vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-          end
-          client.server_capabilities.semanticTokensProvider = nil
+          -- Toggle inlay hints on/off
+          vim.keymap.set('n',  '<Leader>=',
+            function()
+              if vim.lsp.get_client_by_id(ev.data.client_id).server_capabilities.inlayHintProvider then
+                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+              end
+            end
+          )
+
+          -- C++ specific: switch between source/header
+          vim.keymap.set('n', '<Leader>o', '<CMD>LspClangdSwitchSourceHeader<CR>')
         end,
       })
+
       vim.api.nvim_create_autocmd("BufWritePre", {
         buffer = buffer,
         callback = function() 
