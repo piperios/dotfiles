@@ -20,9 +20,8 @@ vim.o.splitright = true
 vim.o.splitbelow = true
 -- Track undos
 vim.o.undofile = true
---" Decent wildmenu
--- In completion, when there is more than one match,
--- list all matches, and only complete to longest common match
+-- Decent wildmenu
+-- In completion, when there is more than one match, list all matches, and only complete to longest common match
 vim.o.wildmode = 'list:longest'
 -- When opening a file with a command (like :e), don't suggest files like there:
 vim.o.wildignore = '.hg,.svn,*~,*.png,*.jpg,*.gif,*.min.js,*.swp,*.o,vendor,dist,_site'
@@ -56,7 +55,6 @@ vim.keymap.set({ 'n', 'v' },  '<C-h>',  '<CMD>nohlsearch<CR>')
 vim.keymap.set('n',  '<leader>d',  '<CMD>bd!<CR>')
 vim.keymap.set('n',  '<leader>q',  '<CMD>q!<CR>')
 vim.keymap.set('n',  '<leader>w',  '<CMD>w<CR>')
-vim.keymap.set('n',  '<leader>;',  '<CMD>Buffers<CR>')
 -- Center search results
 vim.keymap.set('n',  'n',   'nzz',   { silent = true })
 vim.keymap.set('n',  'N',   'Nzz',   { silent = true })
@@ -153,8 +151,9 @@ require('lazy').setup({
     config = function()
       local builtin = require('telescope.builtin') 
       vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = 'Telescope find files' })
-      vim.keymap.set('n', '<leader>t', builtin.live_grep,  { desc = 'Telescope live grep' })
-      vim.keymap.set('n', '<leader>n', builtin.buffers,    { desc = 'Telescope list buffers' })
+      vim.keymap.set('n', '<leader>l', builtin.buffers, { desc = 'Telescope list buffers' })
+      vim.keymap.set('n', 'g/', builtin.live_grep,  { desc = 'Telescope live grep' })
+      vim.keymap.set('n', 'gs', builtin.lsp_dynamic_workspace_symbols,  { desc = 'Telescope LSP workspace symbols' })
     end
   },
   -- Easy surround
@@ -182,7 +181,7 @@ require('lazy').setup({
     config = function () 
       local configs = require("nvim-treesitter.configs")
       configs.setup({
-        ensure_installed = { "bash", "c", "cpp", "lua", "markdown", "rust", "toml", "yaml", "vim", "vimdoc" },
+        ensure_installed = { "bash", "c", "cpp", "lua", "markdown", "python", "rust", "toml", "yaml", "vim", "vimdoc" },
         sync_install = false,
         highlight = { enable = true },
         indent = { enable = true },  
@@ -194,18 +193,31 @@ require('lazy').setup({
     'neovim/nvim-lspconfig',
     config = function()
       -- C++
-      vim.lsp.config('clangd', { cmd = { '/opt/homebrew/opt/llvm/bin/clangd', '--background-index', '--clang-tidy' } })
+      vim.lsp.config('clangd', { 
+        cmd = { 
+          '/opt/homebrew/opt/llvm/bin/clangd',
+          '--all-scopes-completion',
+          '--background-index',
+          '--clang-tidy',
+          '--header-insertion=iwyu',
+          '-j', '6'
+        } 
+      })
       vim.lsp.enable('clangd')
+
+      -- Python
+      vim.lsp.enable('ruff')
+      vim.lsp.enable('ty')
 
       -- Rust
       vim.lsp.config('rust_analyzer', {
         settings = {
           ["rust-analyzer"] = {
-            cargo       = { features = "all" },
-            checkOnSave = { enable = true },
-            check       = { command = "clippy" },
-            imports     = { group   = { enable = true } },
-            completion  = { postfix = { enable = false } },
+            cargo       = { features = "all"    },
+            checkOnSave = { enable   = true     },
+            check       = { command  = "clippy" },
+            imports     = { group    = { enable = false }},
+            completion  = { postfix  = { enable = false }},
           },
         }
       })
@@ -235,17 +247,17 @@ require('lazy').setup({
           -- Split buffer and go to definition on the new split
           vim.keymap.set('n', '<C-w>gd', function() vim.cmd('vsplit') vim.lsp.buf.definition() end, opts)
 
+          -- Rely on Tresitter for syntax highlighting instead of the LSP server
+          vim.lsp.get_client_by_id(ev.data.client_id).server_capabilities.semanticTokensProvider = nil
+
           -- Toggle inlay hints on/off
-          vim.keymap.set('n',  '<Leader>=',
+          vim.keymap.set('n', '<Leader>=',
             function()
               if vim.lsp.get_client_by_id(ev.data.client_id).server_capabilities.inlayHintProvider then
                 vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
               end
             end
           )
-
-          -- C++ specific: switch between source/header
-          vim.keymap.set('n', '<Leader>o', '<CMD>LspClangdSwitchSourceHeader<CR>')
         end,
       })
 
@@ -305,79 +317,7 @@ require('lazy').setup({
         handler_opts = { border = "none" }
       })
     end
-  },
-  -- Debugging
-  {
-    "mfussenegger/nvim-dap",
-    dependencies = {
-      "rcarriga/nvim-dap-ui",
-      "theHamsta/nvim-dap-virtual-text",
-      "nvim-neotest/nvim-nio",
-      "williamboman/mason.nvim",
-    },
-    config = function()
-      local dap = require "dap"
-      local ui = require "dapui"
-
-      require("dapui").setup()
-      require("nvim-dap-virtual-text").setup()
-
-      vim.keymap.set("n", "<Leader>b", dap.toggle_breakpoint)
-      vim.keymap.set("n", "<Leader>gb", dap.run_to_cursor)
-
-      -- Eval var under cursor
-      vim.keymap.set("n", "<space>?", function()
-        require("dapui").eval(nil, { enter = true })
-      end)
-
-      vim.keymap.set("n", "<F5>",  dap.continue)
-      vim.keymap.set("n", "<F6>",  dap.step_over)
-      vim.keymap.set("n", "<F7>",  dap.step_into)
-      vim.keymap.set("n", "<F8>",  dap.step_back)
-      vim.keymap.set("n", "<F9>",  dap.step_out)
-      vim.keymap.set("n", "<F10>", dap.restart)
-
-      dap.listeners.before.attach.dapui_config           = function() ui.open()  end
-      dap.listeners.before.launch.dapui_config           = function() ui.open()  end
-      dap.listeners.before.event_terminated.dapui_config = function() ui.close() end
-      dap.listeners.before.event_exited.dapui_config     = function() ui.close() end
-
-      dap.adapters.lldb = {
-        type = 'executable',
-        command = '/opt/homebrew/opt/llvm/bin/lldb-dap'
-      }
-
-      dap.configurations.cpp = {
-        {
-          name = "Launch file",
-          type = "lldb",
-          request = "launch",
-          program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-          end,
-          cwd = "${workspaceFolder}",
-          stopAtEntry = false,
-          args = {}
-        }
-      }
-
-      dap.configurations.rust = {
-        {
-          name = "Launch file",
-          type = "lldb",
-          request = "launch",
-          program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-          end,
-          cwd = "${workspaceFolder}",
-          stopAtEntry = false,
-          args = {}
-        }
-      }
-
-      vim.fn.sign_define('DapBreakpoint', {text='', texthl = 'Error', linehl='', numhl=''})
-    end,
-  },
+  }
 })
 
 vim.cmd('colorscheme vague')
