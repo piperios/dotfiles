@@ -6,6 +6,9 @@ vim.g.mapleader = " "
 vim.o.foldenable = false
 vim.o.foldmethod = 'manual'
 vim.o.foldlevelstart = 99
+-- Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 -- Scrolling context
 vim.o.scrolloff = 2
 -- Never show me line breaks if they're not there
@@ -41,6 +44,7 @@ vim.o.vb = true
 vim.o.listchars = 'tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•'
 -- Real colors!
 vim.o.termguicolors = true
+vim.o.winborder = "rounded"
 -- More useful diffs (nvim -d) by ignoring whitespace
 vim.opt.diffopt:append('iwhite')
 --- ...and using a smarter algorithm
@@ -72,6 +76,8 @@ vim.keymap.set('n',  'j',   'gj')
 vim.keymap.set('n',  'k',   'gk')
 vim.keymap.set('n',  'gn',  '<CMD>bn!<CR>',  { silent = true })
 vim.keymap.set('n',  'gp',  '<CMD>bp!<CR>',  { silent = true })
+-- Files
+vim.keymap.set('n',  'tf',  '<CMD>Neotree toggle<CR>',  { silent = true })
 
 --
 -- Autocommands
@@ -126,8 +132,20 @@ require('lazy').setup({
       require('vague').setup({
         transparent = false,
         bold = false,
-        italic = false
+        italic = false,
+
+        -- Override highlights or add new highlights
+        on_highlights = function(highlights, colors) end,
+
+        -- Override colors
+        -- colors = {
+        --   func = "#bc96b0",
+        --   keyword = "#787bab",
+        --   string = "#8a739a",
+        --   number = "#8f729e",
+        -- }
       })
+      vim.cmd('colorscheme vague')
     end
   },
   -- Nicer statusbar
@@ -140,20 +158,53 @@ require('lazy').setup({
         options = {
           icons_enabled = true,
           theme = 'vague'
+        },
+        sections = {
+          lualine_c = {{ "filename", path = 3 }}
         }
       }
     end
   },
   -- File/text lookup
   {
-    'nvim-telescope/telescope.nvim', tag = '0.1.8',
+    'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       local builtin = require('telescope.builtin') 
       vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = 'Telescope find files' })
       vim.keymap.set('n', '<leader>l', builtin.buffers, { desc = 'Telescope list buffers' })
-      vim.keymap.set('n', 'g/', builtin.live_grep,  { desc = 'Telescope live grep' })
-      vim.keymap.set('n', 'gs', builtin.lsp_dynamic_workspace_symbols,  { desc = 'Telescope LSP workspace symbols' })
+      vim.keymap.set('n', 'g/', builtin.live_grep, { desc = 'Telescope live grep' })
+      vim.keymap.set('n', 'gs', builtin.lsp_document_symbols, { desc = 'Telescope LSP workspace symbols' })
+      vim.keymap.set('n', 'gS', builtin.lsp_workspace_symbols, { desc = 'Telescope LSP workspace symbols' })
+    end
+  },
+  -- File explorer
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    lazy = false,
+    config = function()
+      require('neo-tree').setup({
+        filesystem = {
+          follow_current_file = {
+            enabled = true,
+          },
+          filtered_items = {
+            visible = true,
+            show_hidden_count = true,
+            hide_dotfiles = true,
+            hide_gitignored = true,
+          }
+        },
+        window = {
+          width = 48
+        }
+      })
     end
   },
   -- Easy surround
@@ -176,17 +227,10 @@ require('lazy').setup({
   },
   -- Syntax highlighting
   {
-   "nvim-treesitter/nvim-treesitter",
+    "nvim-treesitter/nvim-treesitter",
+    lazy = false,
     build = ":TSUpdate",
-    config = function () 
-      local configs = require("nvim-treesitter.configs")
-      configs.setup({
-        ensure_installed = { "bash", "c", "cpp", "lua", "markdown", "python", "rust", "toml", "yaml", "vim", "vimdoc" },
-        sync_install = false,
-        highlight = { enable = true },
-        indent = { enable = true },  
-      })
-    end
+    -- Ensure installed: bash c cpp lua markdown python rust toml yaml vim vimdoc zig
   },
   -- LSP
   {
@@ -223,10 +267,13 @@ require('lazy').setup({
       })
       vim.lsp.enable('rust_analyzer')
 
+      -- Zig
+      vim.lsp.enable('zls')
+
       -- Global mappings.
-      vim.keymap.set('n',  '<Leader>e',  vim.diagnostic.open_float)
-      vim.keymap.set('n',  '[d',         vim.diagnostic.goto_prev)
-      vim.keymap.set('n',  ']d',         vim.diagnostic.goto_next)
+      vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float)
+      vim.keymap.set('n', '[d',        vim.diagnostic.goto_prev)
+      vim.keymap.set('n', ']d',        vim.diagnostic.goto_next)
 
       -- Use LspAttach autocommand to only map the following keys, after the language server attaches to the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
@@ -237,12 +284,12 @@ require('lazy').setup({
 
           -- Buffer local mappings.
           local opts = { buffer = ev.buf }
-          vim.keymap.set('n', 'gD',         vim.lsp.buf.declaration,     opts)
-          vim.keymap.set('n', 'gd',         vim.lsp.buf.definition,      opts)
-          vim.keymap.set('n', 'K',          vim.lsp.buf.hover,           opts)
-          vim.keymap.set('n', 'gi',         vim.lsp.buf.implementation,  opts)
-          vim.keymap.set('n', '<leader>r',  vim.lsp.buf.rename,          opts)
-          vim.keymap.set('n', 'gr',         vim.lsp.buf.references,      opts)
+          vim.keymap.set('n', 'gD',        vim.lsp.buf.declaration,    opts)
+          vim.keymap.set('n', 'gd',        vim.lsp.buf.definition,     opts)
+          vim.keymap.set('n', 'K',         vim.lsp.buf.hover,          opts)
+          vim.keymap.set('n', 'gi',        vim.lsp.buf.implementation, opts)
+          vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename,         opts)
+          vim.keymap.set('n', 'gr',        vim.lsp.buf.references,     opts)
 
           -- Split buffer and go to definition on the new split
           vim.keymap.set('n', '<C-w>gd', function() vim.cmd('vsplit') vim.lsp.buf.definition() end, opts)
@@ -251,7 +298,7 @@ require('lazy').setup({
           vim.lsp.get_client_by_id(ev.data.client_id).server_capabilities.semanticTokensProvider = nil
 
           -- Toggle inlay hints on/off
-          vim.keymap.set('n', '<Leader>=',
+          vim.keymap.set('n', 'ti',
             function()
               if vim.lsp.get_client_by_id(ev.data.client_id).server_capabilities.inlayHintProvider then
                 vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
@@ -320,5 +367,34 @@ require('lazy').setup({
   }
 })
 
-vim.cmd('colorscheme vague')
+-- Treesitter
+vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.wo[0][0].foldmethod = 'expr'
+
+-- These come pre-built with Neovim so no need to re-install
+local pre_installed_parsers = {
+    "c",
+    "lua",
+    "markdown",
+    "markdown_inline",
+    "query",
+    "vim",
+    "vimdoc",
+}
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = config_augroup,
+    callback = function(args)
+        local treesitter = require('nvim-treesitter')
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if vim.list_contains(treesitter.get_available(), lang) then
+            if not vim.list_contains(treesitter.get_installed(), lang)
+                and not vim.list_contains(pre_installed_parsers, lang) then
+                treesitter.install(lang):wait()
+            end
+            vim.treesitter.start(args.buf)
+        end
+    end,
+    desc = "Enable nvim-treesitter and install parser if not installed"
+})
 

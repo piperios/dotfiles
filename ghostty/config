@@ -1,10 +1,17 @@
 cursor-style = block
 cursor-style-blink = true
 font-family = Iosevka Term
-font-size = 15
+font-size = 13
 font-thicken = true
 font-thicken-strength = 120
 macos-titlebar-proxy-icon = hidden
+macos-titlebar-style = tabs
 mouse-hide-while-typing = true
 theme = vague
-title = "Ghostty"
+window-height = 98
+window-width = 361
+
+keybind = super+ctrl+h=goto_split:left
+keybind = super+ctrl+j=goto_split:down
+keybind = super+ctrl+k=goto_split:up
+keybind = super+ctrl+l=goto_split:right
