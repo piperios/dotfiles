@@ -76,6 +76,7 @@ vim.keymap.set('n',  'j',   'gj')
 vim.keymap.set('n',  'k',   'gk')
 vim.keymap.set('n',  'gn',  '<CMD>bn!<CR>',  { silent = true })
 vim.keymap.set('n',  'gp',  '<CMD>bp!<CR>',  { silent = true })
+vim.keymap.set('n',  'gl',  '<CMD>e #<CR>',  { silent = true })
 -- Files
 vim.keymap.set('n',  'tf',  '<CMD>Neotree toggle<CR>',  { silent = true })
 
@@ -85,10 +86,7 @@ vim.keymap.set('n',  'tf',  '<CMD>Neotree toggle<CR>',  { silent = true })
 -- Highlight yanked text
 vim.api.nvim_create_autocmd(
   'TextYankPost',
-  {
-    pattern = '*',
-    command = 'silent! lua vim.highlight.on_yank({ timeout = 500 })'
-  }
+  { pattern = '*', command = 'silent! lua vim.highlight.on_yank({ timeout = 500 })' }
 )
 -- Jump to last edit position on opening file
 vim.api.nvim_create_autocmd(
@@ -133,17 +131,6 @@ require('lazy').setup({
         transparent = false,
         bold = false,
         italic = false,
-
-        -- Override highlights or add new highlights
-        on_highlights = function(highlights, colors) end,
-
-        -- Override colors
-        -- colors = {
-        --   func = "#bc96b0",
-        --   keyword = "#787bab",
-        --   string = "#8a739a",
-        --   number = "#8f729e",
-        -- }
       })
       vim.cmd('colorscheme vague')
     end
@@ -168,11 +155,15 @@ require('lazy').setup({
   -- File/text lookup
   {
     'nvim-telescope/telescope.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    },
     config = function()
       local builtin = require('telescope.builtin') 
       vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = 'Telescope find files' })
       vim.keymap.set('n', '<leader>l', builtin.buffers, { desc = 'Telescope list buffers' })
+      vim.keymap.set('n', '<leader>G', builtin.git_commits, { desc = 'Telescope file commit history' })
       vim.keymap.set('n', 'g/', builtin.live_grep, { desc = 'Telescope live grep' })
       vim.keymap.set('n', 'gs', builtin.lsp_document_symbols, { desc = 'Telescope LSP workspace symbols' })
       vim.keymap.set('n', 'gS', builtin.lsp_workspace_symbols, { desc = 'Telescope LSP workspace symbols' })
@@ -293,6 +284,9 @@ require('lazy').setup({
 
           -- Split buffer and go to definition on the new split
           vim.keymap.set('n', '<C-w>gd', function() vim.cmd('vsplit') vim.lsp.buf.definition() end, opts)
+
+          -- C++ only: jump between source file and header
+          vim.keymap.set('n', 'gh', function() vim.cmd('LspClangdSwitchSourceHeader') end, opts)
 
           -- Rely on Tresitter for syntax highlighting instead of the LSP server
           vim.lsp.get_client_by_id(ev.data.client_id).server_capabilities.semanticTokensProvider = nil
