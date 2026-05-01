@@ -145,7 +145,7 @@ require('lazy').setup({
         options = {
           icons_enabled = true,
           theme = 'vague'
-        },
+        }, 
         sections = {
           lualine_c = {{ "filename", path = 3 }}
         }
@@ -155,7 +155,7 @@ require('lazy').setup({
   -- File/text lookup
   {
     'nvim-telescope/telescope.nvim',
-    dependencies = {
+    dependencies = { 
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     },
@@ -251,20 +251,17 @@ require('lazy').setup({
             cargo       = { features = "all"    },
             checkOnSave = { enable   = true     },
             check       = { command  = "clippy" },
-            imports     = { group    = { enable = false }},
             completion  = { postfix  = { enable = false }},
+            imports     = { group    = { enable = true  }},
           },
         }
       })
       vim.lsp.enable('rust_analyzer')
 
-      -- Zig
-      vim.lsp.enable('zls')
-
       -- Global mappings.
       vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float)
-      vim.keymap.set('n', '[d',        vim.diagnostic.goto_prev)
-      vim.keymap.set('n', ']d',        vim.diagnostic.goto_next)
+      vim.keymap.set('n', 'g[',        vim.diagnostic.goto_prev)
+      vim.keymap.set('n', 'g]',        vim.diagnostic.goto_next)
 
       -- Use LspAttach autocommand to only map the following keys, after the language server attaches to the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
