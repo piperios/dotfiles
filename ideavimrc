@@ -1,0 +1,152 @@
+Plug 'tpope/vim-surround'
+Plug 'machakann/vim-highlightedyank'
+
+" =============================================================================
+" Leader
+" =============================================================================
+let mapleader = " "
+
+" =============================================================================
+" Core Vim Behavior
+" =============================================================================
+set scrolloff=2
+set nowrap
+set number
+set relativenumber
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+set visualbell
+set clipboard+=unnamedplus
+set ideajoin
+set surround
+set notimeout
+set keepjumps
+
+" Tabs / indentation
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set expandtab
+set autoindent
+
+" =============================================================================
+" Plugins / Extensions
+" =============================================================================
+set easymotion
+set quickscope
+
+" =============================================================================
+" Search behavior
+" =============================================================================
+nnoremap <silent> n nzz
+nnoremap <silent> N Nzz
+nnoremap <silent> * *zz
+nnoremap <silent> # #zz
+nnoremap <silent> g* g*zz
+
+nnoremap / /\v
+nnoremap ? ?\v
+
+" =============================================================================
+" Navigation
+" =============================================================================
+nnoremap H ^
+nnoremap L $
+
+" Preserve wrapped-line movement
+nnoremap j gj
+nnoremap k gk
+
+" =============================================================================
+" Clear search highlighting
+" =============================================================================
+nnoremap <C-h> :nohlsearch<CR>
+vnoremap <C-h> :nohlsearch<CR>
+
+" =============================================================================
+" File / Buffer management
+" =============================================================================
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q!<CR>
+nnoremap <leader>d :bd<CR>
+
+" Next / previous tab
+nnoremap gn :tabn<CR>
+nnoremap gp :tabp<CR>
+
+" Recent file
+nnoremap gl :action RecentFiles<CR>
+
+" =============================================================================
+" Telescope equivalents
+" =============================================================================
+" Find files
+nnoremap <leader>f :action GotoFile<CR>
+
+" Buffers
+nnoremap <leader>l :action RecentFiles<CR>
+
+" Live grep
+nnoremap g/ :action FindInPath<CR>
+
+" Git history
+nnoremap <leader>G :action Vcs.ShowTabbedFileHistory<CR>
+
+" Symbols
+nnoremap gs :action FileStructurePopup<CR>
+nnoremap gS :action GotoSymbol<CR>
+
+" =============================================================================
+" File tree
+" =============================================================================
+nnoremap tf :action ActivateProjectToolWindow<CR>
+
+" =============================================================================
+" LSP / IDE navigation
+" =============================================================================
+nnoremap gd :action GotoDeclaration<CR>
+nnoremap gD :action GotoTypeDeclaration<CR>
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gr :action FindUsages<CR>
+
+nnoremap K :action QuickJavaDoc<CR>
+
+nnoremap <leader>r :action RenameElement<CR>
+
+" Vertical split + goto definition approximation
+nnoremap <C-w>gd :action SplitVertically<CR>:action GotoDeclaration<CR>
+
+" Diagnostics
+nnoremap ]d :action GotoNextError<CR>
+nnoremap [d :action GotoPreviousError<CR>
+nnoremap <leader>e :action ShowErrorDescription<CR>
+
+" =============================================================================
+" Formatting
+" =============================================================================
+nnoremap <leader>= :action ReformatCode<CR>
+
+" =============================================================================
+" Source/header switch (C/C++)
+" =============================================================================
+nnoremap gh :action SwitchHeaderSource<CR>
+
+" =============================================================================
+" Inlay hints toggle
+" =============================================================================
+nnoremap ti :action ToggleInlayHintsGlobally<CR>
+
+" =============================================================================
+" EasyMotion
+" =============================================================================
+map <leader><leader>w <Plug>(easymotion-w)
+map <leader><leader>b <Plug>(easymotion-b)
+map <leader><leader>j <Plug>(easymotion-j)
+map <leader><leader>k <Plug>(easymotion-k)
+
+" =============================================================================
+" Better matching
+" =============================================================================
+set matchpairs+=<:>
