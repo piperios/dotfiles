@@ -5,7 +5,6 @@ vim.g.mapleader = " "
 -- No folding
 vim.o.foldenable = false
 vim.o.foldmethod = 'manual'
-vim.o.foldlevelstart = 99
 -- Disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -41,6 +40,7 @@ vim.o.smartcase = true
 -- No beeps
 vim.o.vb = true
 -- Show more hidden characters. Also, show tabs nicer
+vim.o.list = true
 vim.o.listchars = 'tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•'
 -- Real colors!
 vim.o.termguicolors = true
@@ -56,8 +56,8 @@ vim.opt.diffopt:append('indent-heuristic')
 --
 vim.keymap.set({ 'n', 'v' },  '<C-h>',  '<CMD>nohlsearch<CR>')
 -- Leader binds
-vim.keymap.set('n',  '<leader>d',  '<CMD>bd!<CR>')
-vim.keymap.set('n',  '<leader>q',  '<CMD>q!<CR>')
+vim.keymap.set('n',  '<leader>d',  '<CMD>bd<CR>')
+vim.keymap.set('n',  '<leader>q',  '<CMD>q<CR>')
 vim.keymap.set('n',  '<leader>w',  '<CMD>w<CR>')
 -- Center search results
 vim.keymap.set('n',  'n',   'nzz',   { silent = true })
@@ -83,17 +83,22 @@ vim.keymap.set('n',  'tf',  '<CMD>Neotree toggle<CR>',  { silent = true })
 --
 -- Autocommands
 --
+local config_augroup = vim.api.nvim_create_augroup('UserConfig', { clear = true })
+
 -- Highlight yanked text
 vim.api.nvim_create_autocmd(
   'TextYankPost',
-  { pattern = '*', command = 'silent! lua vim.highlight.on_yank({ timeout = 500 })' }
+  {
+    group = config_augroup,
+    callback = function() vim.hl.on_yank({ timeout = 500 }) end,
+  }
 )
 -- Jump to last edit position on opening file
 vim.api.nvim_create_autocmd(
   'BufReadPost',
   {
-    pattern = '*',
-    callback = function(ev)
+    group = config_augroup,
+    callback = function()
       if vim.fn.line("'\"") > 1 and vim.fn.line("'\"") <= vim.fn.line("$") then
         -- ...except for in git commit messages
         if not vim.fn.expand('%:p'):find('.git', 1, true) then
@@ -109,7 +114,7 @@ vim.api.nvim_create_autocmd(
 --
 -- Install lazy.nvim
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   vim.fn.system({
     'git',
     'clone',
@@ -120,12 +125,14 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+
 -- Configure plugins
 require('lazy').setup({
   -- Colorscheme
   {
     'vague2k/vague.nvim',
     lazy = false,
+    priority = 1000,
     config = function()
       require('vague').setup({
         transparent = false,
@@ -139,33 +146,28 @@ require('lazy').setup({
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
-    lazy = false, 
-    config = function()
-      require('lualine').setup {
-        options = {
-          icons_enabled = true,
-          theme = 'vague'
-        }, 
-        sections = {
-          lualine_c = {{ "filename", path = 3 }}
-        }
-      }
-    end
+    opts = {
+      sections = { lualine_c = {{ 'filename', path = 3 }} }
+    },
   },
   -- File/text lookup
   {
     'nvim-telescope/telescope.nvim',
-    dependencies = { 
+    dependencies = {
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     },
     config = function()
-      local builtin = require('telescope.builtin') 
+      require('telescope').setup({})
+      require('telescope').load_extension('fzf')
+
+      local builtin = require('telescope.builtin')
+
       vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = 'Telescope find files' })
       vim.keymap.set('n', '<leader>l', builtin.buffers, { desc = 'Telescope list buffers' })
-      vim.keymap.set('n', '<leader>G', builtin.git_commits, { desc = 'Telescope file commit history' })
+      vim.keymap.set('n', '<leader>H', builtin.git_commits, { desc = 'Telescope repository commit history' })
       vim.keymap.set('n', 'g/', builtin.live_grep, { desc = 'Telescope live grep' })
-      vim.keymap.set('n', 'gs', builtin.lsp_document_symbols, { desc = 'Telescope LSP workspace symbols' })
+      vim.keymap.set('n', 'gs', builtin.lsp_document_symbols, { desc = 'Telescope LSP document symbols' })
       vim.keymap.set('n', 'gS', builtin.lsp_workspace_symbols, { desc = 'Telescope LSP workspace symbols' })
     end
   },
@@ -179,37 +181,49 @@ require('lazy').setup({
       "nvim-tree/nvim-web-devicons",
     },
     lazy = false,
-    config = function()
-      require('neo-tree').setup({
-        filesystem = {
-          follow_current_file = {
-            enabled = true,
-          },
-          filtered_items = {
-            visible = true,
-            show_hidden_count = true,
-            hide_dotfiles = true,
-            hide_gitignored = true,
-          }
-        },
-        window = {
-          width = 48
+    opts = {
+      filesystem = {
+        follow_current_file = { enabled = true },
+        filtered_items = {
+          visible = true,
+          show_hidden_count = true,
+          hide_dotfiles = true,
+          hide_gitignored = true,
         }
-      })
+      },
+      window = { width = 64 }
+    },
+  },
+  -- Version control
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = false,
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
+    keys = { { "<Leader>G", "<CMD>LazyGit<CR>", desc = "LazyGit" } },
+    config = function()
+        require("telescope").load_extension("lazygit")
     end
   },
   -- Easy surround
   {
     'kylechui/nvim-surround',
     event = 'VeryLazy',
-    config = function()
-      require('nvim-surround').setup()
-    end
+    opts = {},
   },
   -- better %
   {
     'andymass/vim-matchup',
-    config = function()
+    init = function()
       vim.g.matchup_matchparen_offscreen = { method = 'popup' }
     end
   },
@@ -221,22 +235,24 @@ require('lazy').setup({
     "nvim-treesitter/nvim-treesitter",
     lazy = false,
     build = ":TSUpdate",
-    -- Ensure installed: bash c cpp lua markdown python rust toml yaml vim vimdoc zig
   },
   -- LSP
   {
     'neovim/nvim-lspconfig',
+    dependencies = { 'hrsh7th/cmp-nvim-lsp' },
     config = function()
+      vim.lsp.config('*', { capabilities = require('cmp_nvim_lsp').default_capabilities() })
+
       -- C++
-      vim.lsp.config('clangd', { 
-        cmd = { 
-          '/opt/homebrew/opt/llvm/bin/clangd',
+      vim.lsp.config('clangd', {
+        cmd = {
+          '/usr/bin/clangd',
           '--all-scopes-completion',
           '--background-index',
           '--clang-tidy',
           '--header-insertion=iwyu',
-          '-j', '6'
-        } 
+          '-j', '8'
+        }
       })
       vim.lsp.enable('clangd')
 
@@ -248,27 +264,35 @@ require('lazy').setup({
       vim.lsp.config('rust_analyzer', {
         settings = {
           ["rust-analyzer"] = {
-            cargo       = { features = "all"    },
-            checkOnSave = { enable   = true     },
-            check       = { command  = "clippy" },
-            completion  = { postfix  = { enable = false }},
-            imports     = { group    = { enable = true  }},
+            cargo        = { features = "all"    },
+            checkOnSave  = true,
+            check        = { command  = "clippy" },
+            completion   = { postfix  = { enable = false }},
+            imports      = { group    = { enable = true  }},
           },
         }
       })
       vim.lsp.enable('rust_analyzer')
 
+      -- Zig
+      vim.lsp.config('zls', {
+        settings = {
+          zls = { enable_build_on_save = true },
+        }
+      })
+      vim.lsp.enable('zls')
+
       -- Global mappings.
       vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float)
-      vim.keymap.set('n', 'g[',        vim.diagnostic.goto_prev)
-      vim.keymap.set('n', 'g]',        vim.diagnostic.goto_next)
+      vim.keymap.set('n', 'g[', function() vim.diagnostic.jump({ count = -1, float = true }) end)
+      vim.keymap.set('n', 'g]', function() vim.diagnostic.jump({ count = 1, float = true }) end)
 
       -- Use LspAttach autocommand to only map the following keys, after the language server attaches to the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('UserLspConfig', {}),
         callback = function(ev)
-          -- Enable completion triggered by <C-x><C-o>
-          vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+          local client = vim.lsp.get_client_by_id(ev.data.client_id)
+          if not client then return end
 
           -- Buffer local mappings.
           local opts = { buffer = ev.buf }
@@ -283,27 +307,32 @@ require('lazy').setup({
           vim.keymap.set('n', '<C-w>gd', function() vim.cmd('vsplit') vim.lsp.buf.definition() end, opts)
 
           -- C++ only: jump between source file and header
-          vim.keymap.set('n', 'gh', function() vim.cmd('LspClangdSwitchSourceHeader') end, opts)
+          if client.name == 'clangd' then
+            vim.keymap.set('n', 'gh', function() vim.cmd('LspClangdSwitchSourceHeader') end, opts)
+          end
 
-          -- Rely on Tresitter for syntax highlighting instead of the LSP server
-          vim.lsp.get_client_by_id(ev.data.client_id).server_capabilities.semanticTokensProvider = nil
+          -- Rely on Treesitter for syntax highlighting instead of the LSP server
+          client.server_capabilities.semanticTokensProvider = nil
 
-          -- Toggle inlay hints on/off
-          vim.keymap.set('n', 'ti',
-            function()
-              if vim.lsp.get_client_by_id(ev.data.client_id).server_capabilities.inlayHintProvider then
-                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
-              end
+          -- Resolve supporting clients at invocation time, including after detach.
+          vim.keymap.set('n', 'ti', function()
+            local clients = vim.lsp.get_clients({ bufnr = ev.buf, method = 'textDocument/inlayHint' })
+            if #clients > 0 then
+              local filter = { bufnr = ev.buf }
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
             end
-          )
+          end, { buffer = ev.buf, desc = 'Toggle inlay hints' })
         end,
       })
 
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        buffer = buffer,
-        callback = function() 
-          vim.lsp.buf.format { async = true }
-        end
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = vim.api.nvim_create_augroup('UserLspFormat', { clear = true }),
+        callback = function(ev)
+          local clients = vim.lsp.get_clients({ bufnr = ev.buf, method = 'textDocument/formatting' })
+          if #clients > 0 then
+            vim.lsp.buf.format({ bufnr = ev.buf, async = false, timeout_ms = 3000 })
+          end
+        end,
       })
     end
   },
@@ -312,16 +341,13 @@ require('lazy').setup({
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
-      'neovim/nvim-lspconfig',
       'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
     },
     config = function()
       local cmp = require('cmp')
       cmp.setup({
         snippet = {
-          -- REQUIRED by nvim-cmp. Get rid of it once we can
           expand = function(args)
             vim.snippet.expand(args.body)
           end,
@@ -331,61 +357,35 @@ require('lazy').setup({
           ['<C-f>']     = cmp.mapping.scroll_docs(4),
           ['<C-Space>'] = cmp.mapping.complete(),
           ['<C-e>']     = cmp.mapping.abort(),
-          -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
           ['<CR>'] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
         }),
-        sources = cmp.config.sources({ { name = 'nvim_lsp' } }, 
+        sources = cmp.config.sources({ { name = 'nvim_lsp' } },
         { { name = 'path' } }),
         experimental = { ghost_text = true },
       })
-
-      -- Enable completing paths in :
-      cmp.setup.cmdline(':', { sources = cmp.config.sources({ { name = 'path' } }) })
     end
   },
   -- Inline function signatures
   {
     "ray-x/lsp_signature.nvim",
     event = "VeryLazy",
-    opts = {},
-    config = function(_, opts)
-      -- Get signatures (and _only_ signatures) when in argument lists.
-      require "lsp_signature".setup({
-        doc_lines = 0,
-        handler_opts = { border = "none" }
-      })
-    end
+    opts = {
+      doc_lines = 0,
+      handler_opts = { border = 'none' },
+    },
   }
 })
 
--- Treesitter
-vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-vim.wo[0][0].foldmethod = 'expr'
-
--- These come pre-built with Neovim so no need to re-install
-local pre_installed_parsers = {
-    "c",
-    "lua",
-    "markdown",
-    "markdown_inline",
-    "query",
-    "vim",
-    "vimdoc",
-}
-
-vim.api.nvim_create_autocmd("FileType", {
-    group = config_augroup,
-    callback = function(args)
-        local treesitter = require('nvim-treesitter')
-        local lang = vim.treesitter.language.get_lang(args.match)
-        if vim.list_contains(treesitter.get_available(), lang) then
-            if not vim.list_contains(treesitter.get_installed(), lang)
-                and not vim.list_contains(pre_installed_parsers, lang) then
-                treesitter.install(lang):wait()
-            end
-            vim.treesitter.start(args.buf)
-        end
-    end,
-    desc = "Enable nvim-treesitter and install parser if not installed"
+-- Start highlighting only when a parser is available.
+vim.api.nvim_create_autocmd('FileType', {
+  group = config_augroup,
+  callback = function(ev)
+    local lang = vim.treesitter.language.get_lang(ev.match)
+    if not lang then return end
+    local ok, loaded = pcall(vim.treesitter.language.add, lang)
+    if ok and loaded then
+      vim.treesitter.start(ev.buf, lang)
+    end
+  end,
+  desc = 'Enable Treesitter for installed parsers',
 })
-
