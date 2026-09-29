@@ -1,0 +1,211 @@
+{
+    "agent": {
+        "default_profile": "ask",
+        "profiles": {
+            "plan": {
+                "name": "Plan",
+                "tools": {},
+                "enable_all_context_servers": false,
+                "context_servers": {}
+            }
+        },
+        "sidebar_side": "right",
+        "dock": "right",
+        "enabled": true
+    },
+    "agent_servers": {
+        "codex-acp": {
+            "default_config_options": {
+                "model": "gpt-6.1-sol",
+                "fast-mode": false,
+                "collaboration_mode": "plan",
+                "mode": "agent"
+            },
+            "type": "registry"
+        }
+    },
+    "agent_ui_font_size": 14.0,
+    "auto_signature_help": true,
+    "base_keymap": "VSCode",
+    "buffer_font_family": "Iosevka",
+    "buffer_font_size": 13,
+    "buffer_font_weight": 500,
+    "buffer_line_height": {
+        "custom": 1.3
+    },
+    "cli_default_open_behavior": "existing_window",
+    "collaboration_panel": {
+        "button": false
+    },
+    "current_line_highlight": "gutter",
+    "cursor_blink": false,
+    "disable_ai": false,
+    "edit_predictions": {
+        "provider": "none"
+    },
+    "formatter": "language_server",
+    "format_on_save": "on",
+    "git": {
+        "git_gutter": "tracked_files",
+        "gutter_debounce": null,
+        "inline_blame": {
+            "enabled": false,
+        },
+        "hunk_style": null
+    },
+    "git_panel": {
+        "dock": "left"
+    },
+    "gutter": {
+        "breakpoints": true,
+        "line_numbers": true
+    },
+    "icon_theme": {
+        "mode": "dark",
+        "light": "Zed (Default)",
+        "dark": "Zed (Default)"
+    },
+    "inlay_hints": {
+        "enabled": false,
+        "show_background": true,
+        "toggle_on_modifiers_press": {
+            "control": true,
+            "alt": true
+        }
+    },
+    "inline_code_actions": false,
+    "languages": {
+        "C": {
+            "language_servers": [
+                "clangd"
+            ]
+        },
+        "C++": {
+            "language_servers": [
+                "clangd"
+            ]
+        },
+        "Python": {
+            "language_servers": [
+                "ty",
+                "ruff"
+            ],
+            "formatter": {
+                "language_server": {
+                    "name": "ruff"
+                }
+            }
+        },
+        "Rust": {
+            "language_servers": [
+                "rust-analyzer"
+            ]
+        }
+    },
+    "lsp": {
+        "clangd": {
+            "binary": {
+                "path": "/opt/homebrew/opt/llvm/bin/clangd",
+                "arguments": [
+                    "--all-scopes-completion",
+                    "--background-index",
+                    "--clang-tidy",
+                    "--header-insertion=iwyu",
+                    "-j",
+                    "6"
+                ]
+            }
+        },
+        "rust-analyzer": {
+            "settings": {},
+            "initialization_options": {
+                "cargo": {
+                    "features": "all"
+                },
+                "checkOnSave": true,
+                "check": {
+                    "command": "clippy"
+                },
+                "completion": {
+                    "postfix": {
+                        "enable": false
+                    }
+                },
+                "imports": {
+                    "group": {
+                        "enable": true
+                    }
+                }
+            }
+        }
+    },
+    "minimap": {
+        "show": "auto"
+    },
+    "pane_split_direction_horizontal": "down",
+    "pane_split_direction_vertical": "right",
+    "preview_tabs": {
+        "enabled": false
+    },
+    "project_panel": {
+        "dock": "left"
+    },
+    "relative_line_numbers": "enabled",
+    "restore_on_file_reopen": true,
+    "restore_on_startup": "empty_tab",
+    "scrollbar": {
+        "show": "system"
+    },
+    "semantic_tokens": "off",
+    "show_whitespaces": "none",
+    "soft_wrap": "none",
+    "ssh_connections": [
+        {
+            "host": "f",
+            "args": [],
+            "projects": [
+                {
+                    "paths": [
+                        "/home/pip/workspace/ruff"
+                    ]
+                },
+                {
+                    "paths": [
+                        "/home/pip/workspace/zed"
+                    ]
+                }
+            ]
+        }
+    ],
+    "tabs": {
+        "file_icons": true,
+        "git_status": true,
+        "show_close_button": "hidden",
+        "show_diagnostics": "all"
+    },
+    "tab_size": 4,
+    "telemetry": {
+        "metrics": false,
+        "diagnostics": false
+    },
+    "terminal": {
+        "bell": "off",
+        "font_size": 12.0,
+        "shell": "system",
+    },
+    "theme": {
+        "mode": "dark",
+        "dark": "One Dark",
+        "light": "One Light"
+    },
+    "ui_font_features": {
+        "bold": false
+    },
+    "ui_font_size": 14.0,
+    "ui_font_weight": 500.0,
+    "vim": {
+        "use_smartcase_find": true,
+        "use_system_clipboard": "always"
+    },
+    "vim_mode": true
+}

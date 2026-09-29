@@ -1,0 +1,55 @@
+[
+    {
+        "context": "VimControl && !menu",
+        "bindings": {
+            "g n": "pane::ActivateNextItem",
+            "g p": "pane::ActivatePreviousItem",
+            "g r": "editor::FindAllReferences",
+            "shift-h": "vim::StartOfLine",
+            "shift-l": "vim::EndOfLine",
+            "ctrl-w shift-h": [
+                "workspace::MoveItemToPaneInDirection",
+                {
+                    "direction": "left"
+                }
+            ],
+            "ctrl-w shift-j": [
+                "workspace::MoveItemToPaneInDirection",
+                {
+                    "direction": "down"
+                }
+            ],
+            "ctrl-w shift-k": [
+                "workspace::MoveItemToPaneInDirection",
+                {
+                    "direction": "up"
+                }
+            ],
+            "ctrl-w shift-l": [
+                "workspace::MoveItemToPaneInDirection",
+                {
+                    "direction": "right"
+                }
+            ]
+        }
+    },
+    {
+        "context": "vim_mode == normal && !menu",
+        "bindings": {
+            "ctrl-h": "buffer_search::Dismiss",
+            "space b": "editor::ToggleBreakpoint",
+            "space d": "pane::CloseActiveItem",
+            "space f": "file_finder::Toggle",
+            "space q": "pane::CloseActiveItem",
+            "space r": "editor::Rename",
+            "space t": "project_symbols::Toggle",
+            "space w": "workspace::Save"
+        }
+    },
+    {
+        "context": "Workspace",
+        "bindings": {
+            "cmd-shift-g": "git_panel::ToggleFocus"
+        }
+    }
+]
