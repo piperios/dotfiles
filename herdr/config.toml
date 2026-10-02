@@ -1,0 +1,70 @@
+onboarding = false
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+[theme.custom]
+accent = "#6e94b2"
+panel_bg = "#141415"
+sidebar_bg = "#141415"
+active_row_bg = "#252530"
+selection_bg = "#252530"
+surface0 = "#252530"
+surface1 = "#252530"
+surface_dim = "#141415"
+overlay0 = "#606079"
+overlay1 = "#606079"
+text = "#cdcdcd"
+subtext0 = "#606079"
+mauve = "#bb9dbd"
+green = "#7fa563"
+yellow = "#f3be7c"
+red = "#d8647e"
+blue = "#6e94b2"
+teal = "#aeaed1"
+peach = "#e8b589"
+
+[terminal]
+new_cwd = "follow"
+
+[keys]
+prefix = 'ctrl+\'
+new_tab = "prefix+c"
+previous_tab = "prefix+p"
+next_tab = "prefix+n"
+switch_tab = "prefix+1..9"
+rename_tab = "prefix+,"
+rename_workspace = "prefix+r"
+goto = "prefix+shift+s"
+reload_config = "prefix+shift+r"
+settings = "prefix+alt+s"
+resize_mode = "prefix+alt+r"
+split_horizontal = ['prefix+s', 'prefix+"']
+split_vertical = ["prefix+v", "prefix+%"]
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+resize_pane_left = "prefix+shift+h"
+resize_pane_down = "prefix+shift+j"
+resize_pane_up = "prefix+shift+k"
+resize_pane_right = "prefix+shift+l"
+zoom = "prefix+z"
+close_pane = "prefix+x"
+detach = "prefix+d"
+
+[ui]
+accent = "#6e94b2"
+mouse_capture = true
+prompt_new_tab_name = false
+tab_bar_position = "top"
+tab_bar_right = [{ type = "zoom" }, { type = "hostname" }]
+window_title = ""
+pane_borders = "auto"
+pane_outer_borders = false
+pane_gaps = false
+pane_scrollbars = false
+
+[ui.sound]
+enabled = false
