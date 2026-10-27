@@ -74,8 +74,8 @@ vim.keymap.set('',   'H',   '^')
 vim.keymap.set('',   'L',   '$')
 vim.keymap.set('n',  'j',   'gj')
 vim.keymap.set('n',  'k',   'gk')
-vim.keymap.set('n',  'gn',  '<CMD>bn!<CR>',  { silent = true })
-vim.keymap.set('n',  'gp',  '<CMD>bp!<CR>',  { silent = true })
+-- vim.keymap.set('n',  'gn',  '<CMD>bn!<CR>',  { silent = true })
+-- vim.keymap.set('n',  'gp',  '<CMD>bp!<CR>',  { silent = true })
 vim.keymap.set('n',  'gl',  '<CMD>e #<CR>',  { silent = true })
 -- Files
 vim.keymap.set('n',  'tf',  '<CMD>Neotree toggle<CR>',  { silent = true })
@@ -194,25 +194,38 @@ require('lazy').setup({
       window = { width = 64 }
     },
   },
-  -- Version control
+  -- Nice tab render
   {
-    "kdheepak/lazygit.nvim",
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = "nvim-tree/nvim-web-devicons",
     lazy = false,
-    cmd = {
-      "LazyGit",
-      "LazyGitConfig",
-      "LazyGitCurrentFile",
-      "LazyGitFilter",
-      "LazyGitFilterCurrentFile",
+    opts = {
+      options = {
+        mode = "buffers",
+        always_show_bufferline = true,
+        persist_buffer_sort = true,   -- keep manual ordering
+        offsets = {
+          {
+            filetype = "neo-tree",
+            text = "File Explorer",
+            text_align = "left",
+            highlight = "Directory",
+          }
+        },
+      },
+      highlights = {
+        fill = { bg = "#1c1c24" },
+      },
     },
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope.nvim",
+    keys = {
+      { "gn",         "<cmd>BufferLineCycleNext<cr>" },
+      { "gp",         "<cmd>BufferLineCyclePrev<cr>" },
+      { "g<S-n>",     "<cmd>BufferLineMoveNext<cr>"  },
+      { "g<S-p>",     "<cmd>BufferLineMovePrev<cr>"  },
+      { "<leader>bp", "<cmd>BufferLinePick<cr>"      },
+      { "<leader>bc", "<cmd>BufferLinePickClose<cr>" },
     },
-    keys = { { "<Leader>G", "<CMD>LazyGit<CR>", desc = "LazyGit" } },
-    config = function()
-        require("telescope").load_extension("lazygit")
-    end
   },
   -- Easy surround
   {
@@ -273,14 +286,6 @@ require('lazy').setup({
         }
       })
       vim.lsp.enable('rust_analyzer')
-
-      -- Zig
-      vim.lsp.config('zls', {
-        settings = {
-          zls = { enable_build_on_save = true },
-        }
-      })
-      vim.lsp.enable('zls')
 
       -- Global mappings.
       vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float)
