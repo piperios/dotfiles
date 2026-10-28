@@ -43,6 +43,8 @@ vim.o.listchars = 'tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•'
 -- Real colors!
 vim.o.termguicolors = true
 vim.o.winborder = "rounded"
+-- Preselect the first completion item without inserting it
+vim.o.completeopt = 'menu,menuone,noinsert,popup'
 -- More useful diffs (nvim -d) by ignoring whitespace
 vim.opt.diffopt:append('iwhite')
 --- ...and using a smarter algorithm
@@ -72,6 +74,11 @@ vim.keymap.set('',   'L',   '$')
 vim.keymap.set('n',  'gl',  '<CMD>e #<CR>',  { silent = true })
 -- Files
 vim.keymap.set('n',  'tf',  '<CMD>Neotree toggle<CR>',  { silent = true })
+-- Completion
+vim.keymap.set('i',  '<C-Space>',  vim.lsp.completion.get,  { desc = 'Trigger LSP completion' })
+vim.keymap.set('i',  '<CR>',  function()
+  return vim.fn.complete_info({ 'selected' }).selected >= 0 and '<C-y>' or '<CR>'
+end, { expr = true, desc = 'Accept the selected completion item' })
 
 --
 -- Autocommands
@@ -207,7 +214,7 @@ require('lazy').setup({
         },
       },
       highlights = {
-        fill = { bg = "#1c1c24" },
+        fill = { bg = { highlight = "TabLine", attribute = "bg" } },
       },
     },
     keys = {
@@ -249,10 +256,7 @@ require('lazy').setup({
   -- LSP
   {
     'neovim/nvim-lspconfig',
-    dependencies = { 'hrsh7th/cmp-nvim-lsp' },
     config = function()
-      vim.lsp.config('*', { capabilities = require('cmp_nvim_lsp').default_capabilities() })
-
       -- C++
       vim.lsp.config('clangd', {
         cmd = {
@@ -289,6 +293,8 @@ require('lazy').setup({
       vim.keymap.set('n', 'g[', function() vim.diagnostic.jump({ count = -1, float = true }) end)
       vim.keymap.set('n', 'g]', function() vim.diagnostic.jump({ count = 1, float = true }) end)
 
+      local identifier_chars = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_', '')
+
       -- Use LspAttach autocommand to only map the following keys, after the language server attaches to the current buffer
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('UserLspConfig', {}),
@@ -316,6 +322,14 @@ require('lazy').setup({
           -- Rely on Treesitter for syntax highlighting instead of the LSP server
           client.server_capabilities.semanticTokensProvider = nil
 
+          -- Complete on every identifier character, not only the server's trigger characters
+          if client:supports_method('textDocument/completion') then
+            local provider = client.server_capabilities.completionProvider
+            local triggers = vim.list_extend(provider.triggerCharacters or {}, identifier_chars)
+            provider.triggerCharacters = vim.fn.uniq(vim.fn.sort(triggers))
+            vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+          end
+
           -- Resolve supporting clients at invocation time, including after detach.
           vim.keymap.set('n', 'ti', function()
             local clients = vim.lsp.get_clients({ bufnr = ev.buf, method = 'textDocument/inlayHint' })
@@ -332,38 +346,11 @@ require('lazy').setup({
         callback = function(ev)
           local clients = vim.lsp.get_clients({ bufnr = ev.buf, method = 'textDocument/formatting' })
           if #clients > 0 then
-            vim.lsp.buf.format({ bufnr = ev.buf, async = false, timeout_ms = 3000 })
+            -- One formatter per buffer so servers can't reformat each other's output
+            table.sort(clients, function(a, b) return a.name < b.name end)
+            vim.lsp.buf.format({ bufnr = ev.buf, id = clients[1].id, async = false, timeout_ms = 3000 })
           end
         end,
-      })
-    end
-  },
-  -- LSP-based code-completion
-  {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    dependencies = {
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-    },
-    config = function()
-      local cmp = require('cmp')
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            vim.snippet.expand(args.body)
-          end,
-        },
-        mapping = cmp.mapping.preset.insert({
-          ['<C-b>']     = cmp.mapping.scroll_docs(-4),
-          ['<C-f>']     = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<C-e>']     = cmp.mapping.abort(),
-          ['<CR>'] = cmp.mapping.confirm({ select = true, behavior = cmp.ConfirmBehavior.Insert }),
-        }),
-        sources = cmp.config.sources({ { name = 'nvim_lsp' } },
-        { { name = 'path' } }),
-        experimental = { ghost_text = true },
       })
     end
   },
