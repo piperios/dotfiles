@@ -74,6 +74,7 @@ vim.keymap.set('',   'L',   '$')
 vim.keymap.set('n',  'gl',  '<CMD>e #<CR>',  { silent = true })
 -- Files
 vim.keymap.set('n',  'tf',  '<CMD>Neotree toggle<CR>',  { silent = true })
+vim.keymap.set('n',  'tF',  '<CMD>Neotree focus<CR>',   { silent = true })
 -- Completion
 vim.keymap.set('i',  '<C-Space>',  vim.lsp.completion.get,  { desc = 'Trigger LSP completion' })
 vim.keymap.set('i',  '<CR>',  function()
@@ -289,7 +290,6 @@ require('lazy').setup({
       vim.lsp.enable('rust_analyzer')
 
       -- Global mappings.
-      vim.keymap.set('n', '<Leader>e', vim.diagnostic.open_float)
       vim.keymap.set('n', 'g[', function() vim.diagnostic.jump({ count = -1, float = true }) end)
       vim.keymap.set('n', 'g]', function() vim.diagnostic.jump({ count = 1, float = true }) end)
 
@@ -305,11 +305,11 @@ require('lazy').setup({
           -- Buffer local mappings.
           local opts = { buffer = ev.buf }
           vim.keymap.set('n', 'gD',        vim.lsp.buf.declaration,    opts)
-          vim.keymap.set('n', 'gd',        vim.lsp.buf.definition,     opts)
           vim.keymap.set('n', 'K',         vim.lsp.buf.hover,          opts)
-          vim.keymap.set('n', 'gi',        vim.lsp.buf.implementation, opts)
-          vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename,         opts)
-          vim.keymap.set('n', 'gr',        vim.lsp.buf.references,     opts)
+
+          vim.keymap.set('n', 'gd',  lsp_picker('lsp_definitions'),     opts)
+          vim.keymap.set('n', 'gri', lsp_picker('lsp_implementations'), opts)
+          vim.keymap.set('n', 'grr', lsp_picker('lsp_references'),      opts)
 
           -- Split buffer and go to definition on the new split
           vim.keymap.set('n', '<C-w>gd', function() vim.cmd('vsplit') vim.lsp.buf.definition() end, opts)
