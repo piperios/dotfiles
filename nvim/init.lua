@@ -4,7 +4,6 @@ vim.g.mapleader = " "
 
 -- No folding
 vim.o.foldenable = false
-vim.o.foldmethod = 'manual'
 -- Disable netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -25,14 +24,13 @@ vim.o.undofile = true
 -- Decent wildmenu
 -- In completion, when there is more than one match, list all matches, and only complete to longest common match
 vim.o.wildmode = 'list:longest'
--- When opening a file with a command (like :e), don't suggest files like there:
+-- When opening a file with a command (like :e), don't suggest files like these:
 vim.o.wildignore = '.hg,.svn,*~,*.png,*.jpg,*.gif,*.min.js,*.swp,*.o,vendor,dist,_site'
 -- Tabs: No
 vim.o.shiftwidth = 4
 vim.o.softtabstop = 4
 vim.o.tabstop = 4
 vim.o.expandtab = true
-vim.o.autoindent = true
 -- Case-insensitive search/replace
 vim.o.ignorecase = true
 -- Unless uppercase in search term
@@ -49,7 +47,6 @@ vim.o.winborder = "rounded"
 vim.opt.diffopt:append('iwhite')
 --- ...and using a smarter algorithm
 vim.opt.diffopt:append('algorithm:histogram')
-vim.opt.diffopt:append('indent-heuristic')
 
 --
 -- Keybinds
@@ -72,10 +69,6 @@ vim.keymap.set('c',  '%s/',  '%sm/')
 -- Navigation
 vim.keymap.set('',   'H',   '^')
 vim.keymap.set('',   'L',   '$')
-vim.keymap.set('n',  'j',   'gj')
-vim.keymap.set('n',  'k',   'gk')
--- vim.keymap.set('n',  'gn',  '<CMD>bn!<CR>',  { silent = true })
--- vim.keymap.set('n',  'gp',  '<CMD>bp!<CR>',  { silent = true })
 vim.keymap.set('n',  'gl',  '<CMD>e #<CR>',  { silent = true })
 -- Files
 vim.keymap.set('n',  'tf',  '<CMD>Neotree toggle<CR>',  { silent = true })
