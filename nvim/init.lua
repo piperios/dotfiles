@@ -53,7 +53,7 @@ vim.opt.diffopt:append('algorithm:histogram')
 --
 vim.keymap.set({ 'n', 'v' },  '<C-h>',  '<CMD>nohlsearch<CR>')
 -- Leader binds
-vim.keymap.set('n',  '<leader>d',  '<CMD>bd<CR>')
+vim.keymap.set('n',  '<leader>d',  '<CMD>Bdelete<CR>')
 vim.keymap.set('n',  '<leader>q',  '<CMD>q<CR>')
 vim.keymap.set('n',  '<leader>w',  '<CMD>w<CR>')
 -- Center search results
@@ -91,12 +91,11 @@ vim.api.nvim_create_autocmd(
   'BufReadPost',
   {
     group = config_augroup,
-    callback = function()
+    callback = function(ev)
+      -- ...except for in git commit messages
+      if vim.tbl_contains({ 'gitcommit', 'gitrebase' }, vim.filetype.match({ buf = ev.buf })) then return end
       if vim.fn.line("'\"") > 1 and vim.fn.line("'\"") <= vim.fn.line("$") then
-        -- ...except for in git commit messages
-        if not vim.fn.expand('%:p'):find('.git', 1, true) then
-          vim.cmd('exe "normal! g\'\\""')
-        end
+        vim.cmd('exe "normal! g\'\\""')
       end
     end
   }
@@ -219,6 +218,11 @@ require('lazy').setup({
       { "<leader>bp", "<cmd>BufferLinePick<cr>"      },
       { "<leader>bc", "<cmd>BufferLinePickClose<cr>" },
     },
+  },
+  -- Delete buffers without closing their windows
+  {
+    'famiu/bufdelete.nvim',
+    cmd = 'Bdelete',
   },
   -- Easy surround
   {
