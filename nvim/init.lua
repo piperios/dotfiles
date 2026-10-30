@@ -130,16 +130,35 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- Colorscheme
   {
-    'vague2k/vague.nvim',
+    'EdenEast/nightfox.nvim',
     lazy = false,
     priority = 1000,
     config = function()
-      require('vague').setup({
-        transparent = false,
-        bold = false,
-        italic = false,
+      local separator = { fg = 'bg4', bg = 'bg1' }
+      require('nightfox').setup({
+        palettes = {
+          duskfox = { bg0 = '#14101f', bg1 = '#14101f' },
+          dayfox = { bg0 = '#ffffff', bg1 = '#ffffff' },
+        },
+        groups = {
+          all = {
+            WinSeparator = separator,
+            VertSplit = separator,
+            NeoTreeWinSeparator = separator,
+            NeoTreeVertSplit = separator,
+          },
+        },
       })
-      vim.cmd('colorscheme vague')
+
+      local colorschemes = { light = 'dayfox', dark = 'duskfox' }
+      vim.cmd.colorscheme(colorschemes[vim.o.background])
+      vim.api.nvim_create_autocmd('OptionSet', {
+        group = config_augroup,
+        pattern = 'background',
+        nested = true,
+        -- Reloading the active theme resets 'background', so only v:option_new has the requested value
+        callback = function() vim.cmd.colorscheme(colorschemes[vim.v.option_new]) end,
+      })
     end
   },
   -- Nicer statusbar
@@ -182,6 +201,15 @@ require('lazy').setup({
     },
     lazy = false,
     opts = {
+      event_handlers = {
+        {
+          event = "neo_tree_buffer_enter",
+          handler = function()
+            vim.opt_local.number = true
+            vim.opt_local.relativenumber = true
+          end,
+        },
+      },
       filesystem = {
         follow_current_file = { enabled = true },
         filtered_items = {
@@ -200,24 +228,38 @@ require('lazy').setup({
     version = "*",
     dependencies = "nvim-tree/nvim-web-devicons",
     lazy = false,
-    opts = {
-      options = {
-        mode = "buffers",
-        always_show_bufferline = true,
-        persist_buffer_sort = true,   -- keep manual ordering
-        offsets = {
-          {
-            filetype = "neo-tree",
-            text = "File Explorer",
-            text_align = "left",
-            highlight = "Directory",
-          }
+    opts = function()
+      local style_preset = require("bufferline").style_preset
+      return {
+        options = {
+          mode = "buffers",
+          style_preset = { style_preset.no_bold, style_preset.no_italic },
+          themable = false,   -- otherwise tabs keep their old colors when 'background' changes
+          separator_style = { "", "" },
+          indicator = { style = "icon", icon = "▎" },
+          show_buffer_close_icons = false,
+          show_close_icon = false,
+          always_show_bufferline = true,
+          persist_buffer_sort = true,   -- keep manual ordering
+          offsets = {
+            {
+              filetype = "neo-tree",
+              text = "File Explorer",
+              text_align = "left",
+              highlight = "Directory",
+            }
+          },
         },
-      },
-      highlights = {
-        fill = { bg = { highlight = "TabLine", attribute = "bg" } },
-      },
-    },
+        highlights = function(defaults)
+          local spec = require("nightfox.spec").load(vim.g.colors_name)
+          for name, highlight in pairs(defaults.highlights) do
+            highlight.bg = vim.endswith(name, "_selected") and spec.bg2 or spec.bg1
+          end
+          defaults.highlights.indicator_selected.fg = spec.palette.blue.base
+          return defaults.highlights
+        end,
+      }
+    end,
     keys = {
       { "gn",         "<cmd>BufferLineCycleNext<cr>" },
       { "gp",         "<cmd>BufferLineCyclePrev<cr>" },
@@ -292,6 +334,10 @@ require('lazy').setup({
       -- Global mappings.
       vim.keymap.set('n', 'g[', function() vim.diagnostic.jump({ count = -1, float = true }) end)
       vim.keymap.set('n', 'g]', function() vim.diagnostic.jump({ count = 1, float = true }) end)
+
+      local function lsp_picker(name)
+        return function() require('telescope.builtin')[name]() end
+      end
 
       local identifier_chars = vim.split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_', '')
 
