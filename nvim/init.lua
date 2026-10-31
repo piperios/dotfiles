@@ -130,35 +130,21 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- Colorscheme
   {
-    'EdenEast/nightfox.nvim',
+    dir = vim.fn.stdpath('config') .. '/themes/vague',
+    name = 'vague',
     lazy = false,
     priority = 1000,
     config = function()
-      local separator = { fg = 'bg4', bg = 'bg1' }
-      require('nightfox').setup({
-        palettes = {
-          duskfox = { bg0 = '#14101f', bg1 = '#14101f' },
-          dayfox = { bg0 = '#ffffff', bg1 = '#ffffff' },
-        },
-        groups = {
-          all = {
-            WinSeparator = separator,
-            VertSplit = separator,
-            NeoTreeWinSeparator = separator,
-            NeoTreeVertSplit = separator,
-          },
-        },
+      require('vague').setup({
+        on_highlights = function(highlights, colors)
+          local separator = { fg = colors.comment, bg = colors.bg }
+          highlights.WinSeparator = separator
+          highlights.VertSplit = separator
+          highlights.NeoTreeWinSeparator = separator
+          highlights.NeoTreeVertSplit = separator
+        end,
       })
-
-      local colorschemes = { light = 'dayfox', dark = 'duskfox' }
-      vim.cmd.colorscheme(colorschemes[vim.o.background])
-      vim.api.nvim_create_autocmd('OptionSet', {
-        group = config_augroup,
-        pattern = 'background',
-        nested = true,
-        -- Reloading the active theme resets 'background', so only v:option_new has the requested value
-        callback = function() vim.cmd.colorscheme(colorschemes[vim.v.option_new]) end,
-      })
+      vim.cmd.colorscheme('vague')
     end
   },
   -- Nicer statusbar
@@ -251,11 +237,11 @@ require('lazy').setup({
           },
         },
         highlights = function(defaults)
-          local spec = require("nightfox.spec").load(vim.g.colors_name)
+          local palette = require("vague").get_palette()
           for name, highlight in pairs(defaults.highlights) do
-            highlight.bg = vim.endswith(name, "_selected") and spec.bg2 or spec.bg1
+            highlight.bg = vim.endswith(name, "_selected") and palette.line or palette.bg
           end
-          defaults.highlights.indicator_selected.fg = spec.palette.blue.base
+          defaults.highlights.indicator_selected.fg = palette.keyword
           return defaults.highlights
         end,
       }
