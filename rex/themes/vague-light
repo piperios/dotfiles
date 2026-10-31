@@ -1,0 +1,27 @@
+# Vague Light
+# Based on the Vague Light palette from https://github.com/xavier-castro/vague-windsurf (MIT)
+# Brights darken rather than lighten, so they gain contrast on a light background as they do in Vague.
+# As in Vague, 0 is a surface color and 7 is the text color.
+
+palette = 0=#d9dde8
+palette = 1=#b43d59
+palette = 2=#3f7a38
+palette = 3=#a65a15
+palette = 4=#3f6787
+palette = 5=#7e5f87
+palette = 6=#5f629e
+palette = 7=#2a3140
+palette = 8=#6a7288
+palette = 9=#99344c
+palette = 10=#366830
+palette = 11=#8d4c12
+palette = 12=#365873
+palette = 13=#6b5173
+palette = 14=#515386
+palette = 15=#242a36
+
+background = #f3f4f7
+foreground = #2a3140
+cursor-color = #2a3140
+selection-background = #d7dce7
+selection-foreground = #2a3140
