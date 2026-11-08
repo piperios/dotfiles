@@ -30,11 +30,13 @@ local DEFAULT_SETTINGS = {
       ---@type string
       comment = "#606079",
       ---@type string
+      commentText = "#e8b589",
+      ---@type string
       builtin = "#b4d4cf",
       ---@type string
       func = "#c48282",
       ---@type string
-      string = "#e8b589",
+      string = "#a5ae8a",
       ---@type string
       number = "#e0a363",
       ---@type string
@@ -76,9 +78,10 @@ local DEFAULT_SETTINGS = {
       floatBorder = "#8a90a0",
       line = "#d9dde8",
       comment = "#6a7288",
+      commentText = "#9a5b1a",
       builtin = "#2f7b6f",
       func = "#8d3f3f",
-      string = "#9a5b1a",
+      string = "#64734a",
       number = "#a65a15",
       property = "#4f5183",
       constant = "#5f629e",

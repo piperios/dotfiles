@@ -24,6 +24,7 @@
 ---@field floatBorder? string
 ---@field line? string
 ---@field comment? string
+---@field commentText? string
 ---@field builtin? string
 ---@field func? string
 ---@field string? string

@@ -9,7 +9,7 @@ M.get_colors = function(conf)
   local hl = {
     Boolean         = { fg = c.number, bold = conf.bold },
     Character       = { fg = c.string },
-    Comment         = { fg = c.comment, italic = conf.italic },
+    Comment         = { fg = c.commentText, italic = conf.italic },
     Conditional     = { fg = c.keyword },
     Constant        = { fg = c.constant },
     Delimiter       = { fg = c.fg },
