@@ -136,6 +136,8 @@ require('lazy').setup({
     priority = 1000,
     config = function()
       require('vague').setup({
+        bold = false,
+        italic = false,
         on_highlights = function(highlights, colors)
           local separator = { fg = colors.comment, bg = colors.bg }
           highlights.WinSeparator = separator
