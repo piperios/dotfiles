@@ -163,14 +163,17 @@ require('lazy').setup({
     dependencies = {
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+      'nvim-telescope/telescope-file-browser.nvim',
     },
     config = function()
       require('telescope').setup({})
       require('telescope').load_extension('fzf')
+      require('telescope').load_extension('file_browser')
 
       local builtin = require('telescope.builtin')
 
       vim.keymap.set('n', '<leader>f', builtin.find_files, { desc = 'Telescope find files' })
+      vim.keymap.set('n', '<leader>F', require('telescope').extensions.file_browser.file_browser, { desc = 'Telescope file browser' })
       vim.keymap.set('n', '<leader>l', builtin.buffers, { desc = 'Telescope list buffers' })
       vim.keymap.set('n', '<leader>H', builtin.git_commits, { desc = 'Telescope repository commit history' })
       vim.keymap.set('n', 'g/', builtin.live_grep, { desc = 'Telescope live grep' })
