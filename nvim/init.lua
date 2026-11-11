@@ -296,6 +296,7 @@ require('lazy').setup({
           '--background-index',
           '--clang-tidy',
           '--header-insertion=iwyu',
+          '--malloc-trim',
           '-j', '8'
         }
       })
@@ -398,6 +399,8 @@ require('lazy').setup({
     },
   }
 })
+
+vim.filetype.add({ extension = { hip = 'cuda' } })
 
 -- Start highlighting only when a parser is available.
 vim.api.nvim_create_autocmd('FileType', {
