@@ -6,7 +6,9 @@
   "[python]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.codeActionsOnSave": { "source.organizeImports.ruff": "always" }
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.ruff": "always"
+    }
   },
   "[rust]": {
     "editor.formatOnSave": true,
@@ -42,8 +44,12 @@
   "editor.renderWhitespace": "none",
   "editor.semanticHighlighting.enabled": true,
   "editor.semanticTokenColorCustomizations": {
-    "[Dark Modern]":  { "rules": { "concept:cpp" :"#4ec9b0", "modifier:cpp" :"#569CD6" } },
-    "[Light Modern]": { "rules": { "concept:cpp" :"#297f99", "modifier:cpp" :"#0000FF" } },
+    "[Dark Modern]": {
+      "rules": { "concept": "#4EC9B0" }
+    },
+    "[Light Modern]": {
+      "rules": { "concept": "#267F99" }
+    }
   },
   "editor.smoothScrolling": true,
   "editor.tabSize": 4,
@@ -52,19 +58,25 @@
   "explorer.openEditors.visible": 1,
   "extensions.autoUpdate": "off",
   "extensions.ignoreRecommendations": true,
+  "files.associations": {
+    "*.hip": "cpp"
+  },
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
-  "files.watcherExclude": { "**/.git/**": true, },
+  "files.watcherExclude": {
+    "**/.git/**": true,
+  },
   "git.blame.statusBarItem.enabled": true,
   "git.confirmSync": false,
   "git.openRepositoryInParentFolders": "never",
+  "lldb-dap.executable-path": "/opt/homebrew/opt/lldb/bin/lldb-dap",
+  "multiDiffEditor.experimental.fileList": true,
   "python.languageServer": "None",
   "rust-analyzer.checkOnSave": true,
   "rust-analyzer.check.command": "clippy",
   "rust-analyzer.completion.autoimport.enable": false,
   "rust-analyzer.inlayHints.maxLength": 32,
   "scm.diffDecorationsGutterVisibility": "hover",
-  "security.workspace.trust.enabled": false,
   "telemetry.telemetryLevel": "off",
   "telemetry.editStats.enabled": false,
   "telemetry.feedback.enabled": false,
@@ -73,85 +85,500 @@
   "todo-tree.general.exportPath": "/tmp/todo-tree-%Y%m%d-%H%M.txt|todo!",
   "todo-tree.ripgrep.ripgrep": "/opt/homebrew/bin/rg",
   "vim.highlightedyank.enable": true,
+  "vim.highlightedyank.duration": 500,
+  "vim.hlsearch": true,
+  "vim.insertModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "<C-s>"
+      ],
+      "commands": [
+        "editor.action.triggerParameterHints"
+      ]
+    }
+  ],
   "vim.leader": " ",
   "vim.normalModeKeyBindingsNonRecursive": [
     {
-      "before":   ["<C-k>"],
-      "commands": ["editor.action.peekDefinition"],
+      "before": [
+        "<C-h>"
+      ],
+      "commands": [
+        ":nohl"
+      ]
     },
     {
-      "before":   ["<C-W>", "H"],
-      "commands": ["workbench.action.moveEditorToPreviousGroup"],
+      "before": [
+        "<leader>",
+        "d"
+      ],
+      "commands": [
+        "workbench.action.closeActiveEditor"
+      ]
     },
     {
-      "before":   ["<C-W>", "L"],
-      "commands": ["workbench.action.moveEditorToNextGroup"],
+      "before": [
+        "<leader>",
+        "q"
+      ],
+      "commands": [
+        ":q"
+      ]
     },
     {
-      "before":   ["<Leader>", "f"],
-      "commands": ["workbench.action.quickOpen"],
+      "before": [
+        "<leader>",
+        "w"
+      ],
+      "commands": [
+        ":w"
+      ]
     },
     {
-      "before":   ["<Leader>", "r"],
-      "commands": ["editor.action.rename"],
+      "before": [
+        "n"
+      ],
+      "after": [
+        "n",
+        "z",
+        "z"
+      ]
     },
     {
-      "before":   ["<Leader>", "b"],
-      "commands": ["editor.debug.action.toggleBreakpoint"],
+      "before": [
+        "N"
+      ],
+      "after": [
+        "N",
+        "z",
+        "z"
+      ]
     },
     {
-      "before":   ["K"],
-      "commands": ["editor.action.showHover"],
+      "before": [
+        "*"
+      ],
+      "after": [
+        "*",
+        "z",
+        "z"
+      ]
     },
     {
-      "before":   ["g", "h"],
-      "commands": ["clangd.switchheadersource"],
+      "before": [
+        "#"
+      ],
+      "after": [
+        "#",
+        "z",
+        "z"
+      ]
     },
     {
-      "before":   ["g", "i"],
-      "commands": ["editor.action.goToImplementation"],
+      "before": [
+        "g",
+        "*"
+      ],
+      "after": [
+        "g",
+        "*",
+        "z",
+        "z"
+      ]
     },
     {
-      "before":   ["g", "r"],
-      "commands": ["editor.action.goToReferences"],
+      "before": [
+        "H"
+      ],
+      "after": [
+        "^"
+      ]
     },
     {
-      "before":   ["g", "s"],
-      "commands": ["workbench.action.showAllSymbols"],
+      "before": [
+        "L"
+      ],
+      "after": [
+        "$"
+      ]
     },
     {
-      "before":   ["g", "D"],
-      "commands": ["editor.action.revealDeclaration"],
+      "before": [
+        "g",
+        "l"
+      ],
+      "commands": [
+        "workbench.action.openPreviousRecentlyUsedEditorInGroup"
+      ]
     },
     {
-      "before":   ["<C-w>", "g", "d"],
-      "commands": ["editor.action.revealDefinitionAside"],
+      "before": [
+        "t",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.toggleSidebarVisibility"
+      ]
     },
     {
-      "before":   ["g", "/"],
-      "commands": ["workbench.action.findInFiles"],
+      "before": [
+        "t",
+        "F"
+      ],
+      "commands": [
+        "workbench.files.action.showActiveFileInExplorer"
+      ]
     },
+    {
+      "before": [
+        "<leader>",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "l"
+      ],
+      "commands": [
+        "workbench.action.showAllEditors"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "/"
+      ],
+      "commands": [
+        "workbench.action.findInFiles"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "s"
+      ],
+      "commands": [
+        "workbench.action.gotoSymbol"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "S"
+      ],
+      "commands": [
+        "workbench.action.showAllSymbols"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "n"
+      ],
+      "commands": [
+        "workbench.action.nextEditor"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "p"
+      ],
+      "commands": [
+        "workbench.action.previousEditor"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "N"
+      ],
+      "commands": [
+        "workbench.action.moveEditorRightInGroup"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "P"
+      ],
+      "commands": [
+        "workbench.action.moveEditorLeftInGroup"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "b",
+        "p"
+      ],
+      "commands": [
+        "workbench.action.showEditorsInActiveGroup"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "["
+      ],
+      "commands": [
+        "editor.action.marker.prev"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "]"
+      ],
+      "commands": [
+        "editor.action.marker.next"
+      ]
+    },
+    {
+      "before": [
+        "[",
+        "d"
+      ],
+      "commands": [
+        "editor.action.marker.prev"
+      ]
+    },
+    {
+      "before": [
+        "]",
+        "d"
+      ],
+      "commands": [
+        "editor.action.marker.next"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "D"
+      ],
+      "commands": [
+        "editor.action.revealDeclaration"
+      ]
+    },
+    {
+      "before": [
+        "K"
+      ],
+      "commands": [
+        "editor.action.showHover"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "r",
+        "r"
+      ],
+      "commands": [
+        "editor.action.goToReferences"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "r",
+        "i"
+      ],
+      "commands": [
+        "editor.action.goToImplementation"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "r",
+        "n"
+      ],
+      "commands": [
+        "editor.action.rename"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "r",
+        "a"
+      ],
+      "commands": [
+        "editor.action.quickFix"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "r",
+        "t"
+      ],
+      "commands": [
+        "editor.action.goToTypeDefinition"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "O"
+      ],
+      "commands": [
+        "workbench.action.gotoSymbol"
+      ]
+    },
+    {
+      "before": [
+        "<C-w>",
+        "g",
+        "d"
+      ],
+      "commands": [
+        "editor.action.revealDefinitionAside"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "h"
+      ],
+      "commands": [
+        "clangd.switchheadersource"
+      ]
+    },
+    {
+      "before": [
+        "<C-k>"
+      ],
+      "commands": [
+        "editor.action.peekDefinition"
+      ]
+    },
+    {
+      "before": [
+        "<C-W>",
+        "H"
+      ],
+      "commands": [
+        "workbench.action.moveEditorToPreviousGroup"
+      ]
+    },
+    {
+      "before": [
+        "<C-W>",
+        "L"
+      ],
+      "commands": [
+        "workbench.action.moveEditorToNextGroup"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "r"
+      ],
+      "commands": [
+        "editor.action.rename"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "b"
+      ],
+      "commands": [
+        "editor.debug.action.toggleBreakpoint"
+      ]
+    }
+  ],
+  "vim.operatorPendingModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "H"
+      ],
+      "after": [
+        "^"
+      ]
+    },
+    {
+      "before": [
+        "L"
+      ],
+      "after": [
+        "$"
+      ]
+    }
+  ],
+  "vim.visualModeKeyBindingsNonRecursive": [
+    {
+      "before": [
+        "<C-h>"
+      ],
+      "commands": [
+        ":nohl"
+      ]
+    },
+    {
+      "before": [
+        "H"
+      ],
+      "after": [
+        "^"
+      ]
+    },
+    {
+      "before": [
+        "L"
+      ],
+      "after": [
+        "$"
+      ]
+    },
+    {
+      "before": [
+        "g",
+        "r",
+        "a"
+      ],
+      "commands": [
+        "editor.action.quickFix"
+      ]
+    }
   ],
   "vim.smartRelativeLine": true,
-  "vim.vimrc.enable": true,
+  "vim.vimrc.enable": false,
   "window.restoreWindows": "none",
   "window.zoomLevel": -0.25,
   "window.zoomPerWindow": false,
-  "workbench.colorCustomizations": {
-    "[Dark Modern]":  { "editor.background": "#181818" },
-    "[Light Modern]": { "editor.background": "#f8f8f8" },
-  },
   "workbench.colorTheme": "Dark Modern",
+  "workbench.colorCustomizations": {
+    "[Dark Modern]": {
+      "editor.background": "#181818",
+      "editorInlayHint.background": "#181818",
+      "editorInlayHint.foreground": "#a0a0a0"
+    },
+    "[Light Modern]": {
+      "editor.background": "#f8f8f8",
+      "editorInlayHint.background": "#f8f8f8",
+      "editorInlayHint.foreground": "#707070"
+    }
+  },
   "workbench.editor.empty.hint": "hidden",
   "workbench.editor.enablePreview": false,
+  "workbench.preferredDarkColorTheme": "Dark Modern",
+  "workbench.preferredLightColorTheme": "Light Modern",
   "workbench.editor.tabActionCloseVisibility": false,
   "workbench.editor.useModal": "off",
   "workbench.experimental.modernUIEditorTabStyle": "pill",
   "workbench.list.smoothScrolling": true,
   "workbench.panel.defaultLocation": "bottom",
-  "workbench.preferredDarkColorTheme": "Dark Modern",
-  "workbench.preferredLightColorTheme": "Light Modern",
   "workbench.startupEditor": "none",
   "workbench.tips.enabled": false,
+  "workbench.tree.indent": 12,
   "workbench.tree.renderIndentGuides": "onHover",
 }
